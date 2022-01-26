@@ -1,11 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, View, useColorScheme } from 'react-native';
+import AppNavigationBar from './components/navbar';
+import TabManager from './components/tabmanager';
 
 export default function App() {
+
+  const theme = useColorScheme(); //Current Device Theme
+  const [tabIndex, setTabIndex] = useState(0); //Handles which tab the app is currently in
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={theme === 'dark' ? styles.container_dark : styles.container}>
+      <TabManager currentTab={tabIndex} />
+      <AppNavigationBar setTab={setTabIndex} currentTab={tabIndex}/>
     </View>
   );
 }
@@ -13,8 +19,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff', //Light Mode
   },
+  container_dark: {
+    flex: 1,
+    backgroundColor: '#000', //Dark Mode
+  }
 });

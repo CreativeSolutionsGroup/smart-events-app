@@ -1,3 +1,7 @@
+import { Alert } from "react-native";
+
+export const API_URL = "https://api.cusmartevents.com/api";
+
 export const displayDate = (date) => {
     if (date === null || date === undefined) return "ERROR";
 
@@ -63,4 +67,79 @@ export const displayDateRange = (date1, date2) => {
     let hour2Str = hour2 === 0 ? "12" : (hour2 % 12); //If midnight then show 12
     finalStr += hour2Str + ":" + ((min2 < 10 ? '0' : '') + min2) + " " + (pm2 ? "PM" : "AM");
     return finalStr;
+}
+
+export const getUsersStudentID = () => {
+    return "2434296"
+}
+
+export const getStudentTickets = () => {
+    let studentID = getUsersStudentID();
+    return fetch(API_URL + "/tickets")
+      .then((res) => res.json())
+      .then(
+        (res) => {
+          // Filter tickets specific to this student
+          const userTickets = res.data.filter(
+            (val) => val.student_id.toString() === studentID
+          );
+          
+          return userTickets;
+        },
+        (err) => {
+            console.error(err)
+            return [];
+        }
+      );
+  }
+
+export const userHasTicket = async (slot) => {
+    let studentID = getUsersStudentID();
+    return await Promises.all(
+            getStudentTickets(studentID)
+            .then((res) => {
+                let foundTicket = false;
+                res.forEach(element => {
+                    if(element.slot_id === slot._id){
+                        foundTicket = true;
+                    }
+                });
+                resolve(foundTicket)
+            })
+    )
+}
+
+export const claimTicket = (slot) => {
+    let studentID = getUsersStudentID();
+    console.log("Reserving Ticket: " + slot._id + " for " + studentID) 
+
+    const ticketReq = {
+        student_id: studentID,
+        slot_id: slot._id,
+    };
+
+    const postOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ticketReq),
+    };
+
+    return fetch(API_URL + "/tickets", postOptions)
+    .then((res) => res.json())
+    .then(
+        (res) => {
+            console.log("Request Result:", res);
+            if (res.status !== "success") {
+                Alert.alert("Error reserving ticket");
+                return false;
+            } else {
+                Alert.alert("Reserved ticket!");
+                return true;
+            }
+        },
+        (err) => {
+            console.error(err)
+            return false;
+        }
+    );
 }

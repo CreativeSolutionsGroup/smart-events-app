@@ -3,6 +3,8 @@ import { View, StatusBar, Dimensions } from "react-native";
 import TabEvents from "./tabs/TabEvents";
 import TabHome from "./tabs/TabHome";
 
+const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+
 /*
     Component that manages the tab switching display
     Author: Alec Mathisen
@@ -12,7 +14,7 @@ const TabManager = ({currentTab}) => {
     <View
       style={{
         display: 'flex',
-        top: StatusBar.currentHeight, //Sets top to the bottom of the status bar
+        top: STATUS_BAR_HEIGHT, //Sets top to the bottom of the status bar
         height: Dimensions.get('window').height - 100, //Leaves room between nav bar and tab
         width: '100%',
         //Debug Border Box

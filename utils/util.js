@@ -2,6 +2,9 @@ import { Alert } from "react-native";
 
 export const API_URL = "https://api.cusmartevents.com/api";
 
+export const COLOR_CEDARVILLE_BLUE = 'rgb(0,82,136)'
+export const COLOR_CEDARVILLE_YELLOW = 'rgb(235,185,19)'
+
 export const displayDate = (date) => {
     if (date === null || date === undefined) return "ERROR";
 

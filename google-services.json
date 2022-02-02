@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "228611096862",
+    "project_id": "smart-events-app",
+    "storage_bucket": "smart-events-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228611096862:android:992e77217eacb5554b890f",
+        "android_client_info": {
+          "package_name": "creativesolutions.smart_events_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "228611096862-6oqajueu9sont2pf10ideupsfpi0j9k2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDslcbsOzL8PAyxburlKMvNR2uVvTSwD4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "228611096862-6oqajueu9sont2pf10ideupsfpi0j9k2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "228611096862-tj2pu0e6cn80mm3g4iekhgd9vf4o1uqr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "creativesolutions.smart-events-app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
+import { COLOR_CEDARVILLE_BLUE, COLOR_CEDARVILLE_YELLOW } from "../utils/util";
 
 /*
     Navigation Bar that allows the user to switch tabs
@@ -20,7 +21,7 @@ const AppNavigationBar = ({setTab, currentTab}) => {
             style={{ 
                 display: 'flex',
                 flexDirection: "row",
-                alignSelf: 'center', padding: 12, backgroundColor: 'blue',
+                alignSelf: 'center', padding: 12, backgroundColor: COLOR_CEDARVILLE_BLUE,
                 borderRadius: 25
             }} 
         >
@@ -34,7 +35,7 @@ const AppNavigationBar = ({setTab, currentTab}) => {
                     backgroundColor={'transparent'}
                     size={30}
                     iconStyle={{marginRight: 0}}
-                    color={currentTab === 0 ? 'yellow' : 'white'}
+                    color={currentTab === 0 ? COLOR_CEDARVILLE_YELLOW : 'white'}
                     onPress={() => setTab(0)}
                 >
                 </FontAwesome.Button>
@@ -50,7 +51,7 @@ const AppNavigationBar = ({setTab, currentTab}) => {
                     backgroundColor={'transparent'}
                     size={30}
                     iconStyle={{marginRight: 0}}
-                    color={currentTab === 1 ? 'yellow' : 'white'}
+                    color={currentTab === 1 ? COLOR_CEDARVILLE_YELLOW : 'white'}
                     onPress={() => setTab(1)}
                 >
                 </FontAwesome.Button>
@@ -64,9 +65,9 @@ const AppNavigationBar = ({setTab, currentTab}) => {
                     name="list" 
                     borderRadius={25}
                     size={30}
-                    backgroundColor={'yellow'}
+                    backgroundColor={COLOR_CEDARVILLE_YELLOW}
                     iconStyle={{marginRight: 0, marginTop: 2}}
-                    color={currentTab === 2 ? 'white' : 'black'}
+                    color={currentTab === 2 ? 'black' : 'white'}
                     onPress={() => setTab(2)}
                 >
                 </FontAwesome.Button>
@@ -82,7 +83,7 @@ const AppNavigationBar = ({setTab, currentTab}) => {
                     size={30}
                     backgroundColor={'transparent'}
                     iconStyle={{marginRight: 0}}
-                    color={currentTab === 3 ? 'yellow' : 'white'}
+                    color={currentTab === 3 ? COLOR_CEDARVILLE_YELLOW : 'white'}
                     onPress={() => setTab(3)}
                 >
                 </FontAwesome.Button>
@@ -97,7 +98,7 @@ const AppNavigationBar = ({setTab, currentTab}) => {
                     size={30}
                     backgroundColor={'transparent'}
                     iconStyle={{marginRight: 0}}
-                    color={currentTab === 4 ? 'yellow' : 'white'}
+                    color={currentTab === 4 ? COLOR_CEDARVILLE_YELLOW : 'white'}
                     onPress={() => setTab(4)}
                 >
                 </FontAwesome.Button>

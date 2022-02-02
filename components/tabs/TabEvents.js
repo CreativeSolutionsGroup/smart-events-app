@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Text, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from "react-native";
 import { Icon, Card, Image } from 'react-native-elements';
-import { displayDate, displayDateRange, API_URL, getStudentTickets } from "../../utils/util";
+import { displayDate, displayDateRange, API_URL, getStudentTickets, COLOR_CEDARVILLE_BLUE } from "../../utils/util";
 import AttractionModal from "../modal/AttractionModal";
 
 /*
@@ -186,7 +186,7 @@ const TabEvents = () => {
                             >
                                 <Card
                                     containerStyle={{
-                                        backgroundColor: 'blue',
+                                        backgroundColor: COLOR_CEDARVILLE_BLUE,
                                         borderRadius: 5
                                     }}
                                     onPress={() => setOpenAttraction(attraction)}
@@ -208,7 +208,7 @@ const TabEvents = () => {
                                             }}
                                             PlaceholderContent={<ActivityIndicator />}
                                             placeholderStyle={{
-                                                backgroundColor: 'blue',
+                                                backgroundColor: 'transparent',
                                                 aspectRatio: 16 / 9,
                                                 width: '100%',
                                                 flex: 1,

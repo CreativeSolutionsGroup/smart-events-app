@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, SafeAreaView , View, ScrollView, TouchableOpacity, Alert} from "react-native";
-import DarkModeText from "../DarkModeText";
+import { COLOR_CEDARVILLE_BLUE, COLOR_CEDARVILLE_YELLOW } from "../../utils/util";
 
 /*
     Home Tab
@@ -21,7 +21,7 @@ const TabHome = (props) => {
                     style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        backgroundColor: 'blue',
+                        backgroundColor: COLOR_CEDARVILLE_BLUE,
                         marginLeft: 5,
                         marginRight: 5,
                         height: 50,
@@ -32,7 +32,7 @@ const TabHome = (props) => {
                     {/* Current Date */}
                     <View 
                         style={{
-                            backgroundColor: '#0009B3',
+                            backgroundColor: 'rgba(0,0,0,0.25)', //Darker Date Color Area
                             width: '65%',
                             height: '80%',
                             borderRadius: 30,
@@ -59,7 +59,7 @@ const TabHome = (props) => {
                     <TouchableOpacity
                         style={{
                             alignItems: "center",
-                            backgroundColor: 'green',
+                            backgroundColor: COLOR_CEDARVILLE_YELLOW,
                             width: '30%',
                             height: '80%',
                             borderRadius: 30,
@@ -89,12 +89,11 @@ const TabHome = (props) => {
                         marginLeft: 5,
                         marginRight: 5,
                         height: 300,
-                        borderRadius: 2,
-                        borderColor: 'red',
-                        backgroundColor: 'blue'
+                        borderRadius: 5,
+                        backgroundColor: COLOR_CEDARVILLE_BLUE
                     }}
                 >
-                    <DarkModeText>Happening Now</DarkModeText>
+                    <Text>Happening Now</Text>
                 </View>
 
                 {/* My Info */}
@@ -106,12 +105,11 @@ const TabHome = (props) => {
                         marginLeft: 5,
                         marginRight: 5,
                         height: 300,
-                        borderRadius: 2,
-                        borderColor: 'red',
-                        backgroundColor: 'blue'
+                        borderRadius: 5,
+                        backgroundColor: COLOR_CEDARVILLE_BLUE
                     }}
                 >
-                    <DarkModeText>My Info</DarkModeText>
+                    <Text>My Info</Text>
                 </View>
             </ScrollView>
         </SafeAreaView >

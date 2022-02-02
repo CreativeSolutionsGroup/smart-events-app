@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Text, View, ActivityIndicator, ScrollView } from "react-native";
 import { Overlay, Image, Card, Icon, Button } from "react-native-elements";
-import { displayDate, displayDateRange, claimTicket, userHasTicket} from "../../utils/util";
+import { displayDate, displayDateRange, claimTicket, COLOR_CEDARVILLE_YELLOW, COLOR_CEDARVILLE_BLUE} from "../../utils/util";
 
 /*
     Popup for infomation on an event and ticket slots
@@ -169,7 +169,7 @@ const AttractionModal = ({attraction, slots, slotCounts, userTickets, closeModal
                                                 <Card
                                                     key={slot._id}
                                                     containerStyle={{
-                                                        backgroundColor: 'blue',
+                                                        backgroundColor: COLOR_CEDARVILLE_BLUE,
                                                         height: 150,
                                                         borderRadius: 5
                                                     }}
@@ -215,7 +215,7 @@ const AttractionModal = ({attraction, slots, slotCounts, userTickets, closeModal
                                                         <Button
                                                             title={'Claim Ticket'}
                                                             buttonStyle={{
-                                                                backgroundColor: 'green',
+                                                                backgroundColor: COLOR_CEDARVILLE_YELLOW,
                                                                 borderRadius: 3,
                                                             }}
                                                             containerStyle={{

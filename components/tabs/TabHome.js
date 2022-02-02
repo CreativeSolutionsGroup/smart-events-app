@@ -29,7 +29,7 @@ const TabHome = (props) => {
                         marginTop: 20
                     }}
                 >
-                    {/* Current Date */}
+                    {/* Check-in Header */}
                     <View 
                         style={{
                             backgroundColor: 'rgba(0,0,0,0.25)', //Darker Date Color Area
@@ -48,10 +48,11 @@ const TabHome = (props) => {
                                 marginLeft: 'auto',
                                 marginRight: 'auto',
                                 fontSize: 20,
+                                fontWeight: 'bold',
                                 color: 'white'
                             }}
                         >
-                          Mon Jan 24, 2022
+                          ALT 4 🔦
                         </Text>                      
                     </View>
 
@@ -73,6 +74,7 @@ const TabHome = (props) => {
                         <Text style={{
                             color: 'white',
                             fontSize: 20,
+                            fontWeight: 'bold',
                             marginTop: 'auto',
                             marginBottom: 'auto'
                         }}>
@@ -93,7 +95,16 @@ const TabHome = (props) => {
                         backgroundColor: COLOR_CEDARVILLE_BLUE
                     }}
                 >
-                    <Text>Happening Now</Text>
+                    <Text
+                        style={{
+                            color: 'white',
+                            margin: 5,
+                            fontSize: 20,
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        Happening Now
+                    </Text>
                 </View>
 
                 {/* My Info */}
@@ -109,7 +120,16 @@ const TabHome = (props) => {
                         backgroundColor: COLOR_CEDARVILLE_BLUE
                     }}
                 >
-                    <Text>My Info</Text>
+                    <Text
+                        style={{
+                            color: 'white',
+                            margin: 5,
+                            fontSize: 20,
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        My Info
+                    </Text>
                 </View>
             </ScrollView>
         </SafeAreaView >

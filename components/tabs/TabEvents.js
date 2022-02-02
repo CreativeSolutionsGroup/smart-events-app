@@ -76,6 +76,8 @@ const TabEvents = () => {
             sortedAttractions = res.data.sort((a, b) => 
                 ((now >= new Date(b.start_time) && new Date(b.end_time) >= now) ? 1 : 0) - ((now >= new Date(a.start_time) && new Date(a.end_time) >= now) ? 1 : 0)
             );
+            //Sort Events that have passed to the bottom
+            sortedAttractions = res.data.sort((a, b) => (new Date(b.end_time).getTime() < now.getTime()) && (new Date(a.end_time).getTime() >= now.getTime()) ? -1 : 0)
 
             //Remove Hidden Attractions
             let attractions = sortedAttractions.reduce((acc, val) => {
@@ -177,6 +179,8 @@ const TabEvents = () => {
                     Object.entries(attractions).map((l, i) => {
                         let attraction = attractions[l[0]];
                         const hasSlots = slots[attraction._id];
+                        let now = new Date();
+                        let passedEvent = now.getTime() > new Date(attraction.end_time);
                         return (
                             <TouchableOpacity
                                 activeOpacity={0.6}
@@ -187,9 +191,9 @@ const TabEvents = () => {
                                 <Card
                                     containerStyle={{
                                         backgroundColor: COLOR_CEDARVILLE_BLUE,
-                                        borderRadius: 5
+                                        borderRadius: 5,
+                                        opacity: (passedEvent ? 0.5 : 1.0)
                                     }}
-                                    onPress={() => setOpenAttraction(attraction)}
                                 >
                                     <View
                                         style={{

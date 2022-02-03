@@ -1,22 +1,30 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, StatusBar, Platform } from 'react-native';
+import { StyleSheet, View, StatusBar, SafeAreaView} from 'react-native';
 import AppNavigationBar from './components/navbar';
 import TabManager from './components/tabmanager';
 
 export default function App() {
-  const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+
   const [tabIndex, setTabIndex] = useState(0); //Handles which tab the app is currently in
-  const statusBarColor = Platform.OS === 'ios' ? 'black' : 'transparent';
+
   return (
-    <View style={styles.container}>
-      {/* Status Bar Buffer */}
-      <View style={{height: STATUS_BAR_HEIGHT, backgroundColor: statusBarColor}}/> 
+    // Creates the correct amount of space to fit the app below iOS camera bumps
+    <SafeAreaView style={styles.container}>
+      {/* Status Bar Buffer for Android Camera bumps*/}
+      <View style={{ height: StatusBar.currentHeight, backgroundColor: 'white' }}>
+        <StatusBar
+          translucent
+          backgroundColor={'white'}
+          barStyle='dark-content'
+        />
+      </View>
+
 
       {/* App Content */}
       <TabManager currentTab={tabIndex} />
       <AppNavigationBar setTab={setTabIndex} currentTab={tabIndex}/>
-    </View>
+    </SafeAreaView>
   );
 }
 

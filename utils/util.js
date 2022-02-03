@@ -5,6 +5,11 @@ export const API_URL = "https://api.cusmartevents.com/api";
 export const COLOR_CEDARVILLE_BLUE = 'rgb(0,82,136)'
 export const COLOR_CEDARVILLE_YELLOW = 'rgb(235,185,19)'
 
+
+export function getUserInfo(){
+    return {name: 'Alec Mathisen', student_id: '2434296', phone: '(123) 456-7890', rewardPoints: 100}
+}
+
 export const displayDate = (date) => {
     if (date === null || date === undefined) return "ERROR";
 
@@ -72,12 +77,8 @@ export const displayDateRange = (date1, date2) => {
     return finalStr;
 }
 
-export const getUsersStudentID = () => {
-    return "2434296"
-}
-
 export const getStudentTickets = () => {
-    let studentID = getUsersStudentID();
+    let studentID = getUserInfo().student_id;
     return fetch(API_URL + "/tickets")
       .then((res) => res.json())
       .then(
@@ -97,7 +98,7 @@ export const getStudentTickets = () => {
   }
 
 export const userHasTicket = async (slot) => {
-    let studentID = getUsersStudentID();
+    let studentID = getUserInfo().student_id;
     return await Promises.all(
             getStudentTickets(studentID)
             .then((res) => {
@@ -113,7 +114,7 @@ export const userHasTicket = async (slot) => {
 }
 
 export const claimTicket = (slot) => {
-    let studentID = getUsersStudentID();
+    let studentID = getUserInfo().student_id;
     console.log("Reserving Ticket: " + slot._id + " for " + studentID) 
 
     const ticketReq = {
@@ -145,4 +146,68 @@ export const claimTicket = (slot) => {
             return false;
         }
     );
+}
+
+//Reward Points
+
+/*const reward_tiers = [
+    {
+        min_points: 1000,
+        color: 'gold', 
+        name: 'Gold'
+    },
+    {
+        min_points: 750,
+        color: 'silver', 
+        name: 'Silver'
+    },
+    {
+        min_points: 500,
+        color: 'purple', 
+        name: 'Purple'
+    },
+    {
+        min_points: 250,
+        color: 'green', 
+        name: 'Emerald'
+    },
+    {
+        min_points: 0,
+        color: 'orange', 
+        name: 'Bronze'
+    }
+]*/
+    
+export const reward_tiers = [
+    {
+        min_points: 1000,
+        color: 'gold', 
+        name: 'Gold'
+    },
+    {
+        min_points: 500,
+        color: 'silver', 
+        name: 'Silver'
+    },
+    {
+        min_points: 0,
+        color: 'orange', 
+        name: 'Bronze'
+    }
+]   
+
+//Sort the tiers in order of largest min_points first
+export function getSortedRewardTiers(){
+    return reward_tiers.sort((a, b) => b.min_points > a.min_points ? 1 : -1);
+}
+
+//Get the maximum tier points
+export function getMaxRewardTierPoints() {
+    return getSortedRewardTiers()[0].min_points;
+}
+
+//Get the users current tier
+export function getUserRewardTier(){
+    let points = getUserInfo().rewardPoints;
+    return getSortedRewardTiers().find((tier) => tier.min_points <= points);
 }

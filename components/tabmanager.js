@@ -1,7 +1,9 @@
 import React from "react";
 import { View, StatusBar, Dimensions } from "react-native";
-import TabEvents from "./tabs/TabEvents";
 import TabHome from "./tabs/TabHome";
+import TabEvents from "./tabs/TabEvents";
+import TabAccount from "./tabs/TabAccount";
+
 
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
@@ -37,7 +39,7 @@ const TabManager = ({currentTab}) => {
                 <View /> //Tickets
             :
             currentTab === 4 ?
-                <View /> //Account
+                <TabAccount /> //Account
             :
             <View />
         }

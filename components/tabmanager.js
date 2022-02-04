@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Dimensions } from "react-native";
-import TabEvents from "./tabs/TabEvents";
 import TabHome from "./tabs/TabHome";
 import TabEvents from "./tabs/TabEvents";
 import TabAccount from "./tabs/TabAccount";
@@ -10,8 +9,9 @@ import TabAccount from "./tabs/TabAccount";
     Component that manages the tab switching display
     Author: Alec Mathisen
 */
-const TabManager = ({currentTab}) => {
-  return (
+const TabManager = ({currentTab, navigation}) => {
+
+return (
     <View
       style={{
         display: 'flex',
@@ -36,7 +36,7 @@ const TabManager = ({currentTab}) => {
                 <View /> //Tickets
             :
             currentTab === 4 ?
-                <TabAccount /> //Account
+                <TabAccount navigation={navigation}/> //Account
             :
             <View />
         }

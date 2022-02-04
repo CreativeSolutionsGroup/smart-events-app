@@ -7,7 +7,7 @@ export const COLOR_CEDARVILLE_YELLOW = 'rgb(235,185,19)'
 
 
 export function getUserInfo(){
-    return {name: 'Alec Mathisen', student_id: '2434296', phone: '(123) 456-7890', rewardPoints: 100}
+    return {name: 'Alec Mathisen', student_id: '2434296', phone: '(123) 456-7890', rewardPoints: 600}
 }
 
 export const displayDate = (date) => {
@@ -182,19 +182,56 @@ export const reward_tiers = [
     {
         min_points: 1000,
         color: 'gold', 
-        name: 'Gold'
+        name: 'Gold',
+        description: '- 25% off Rinnova\n- 2nd Perk',
+        perks: []
     },
     {
         min_points: 500,
         color: 'silver', 
-        name: 'Silver'
+        name: 'Silver',
+        description: '- 10% off Rinnova\n- 2nd Perk',
+        perks: []
     },
     {
         min_points: 0,
         color: 'orange', 
-        name: 'Bronze'
+        name: 'Bronze',
+        description: '- 5% off Rinnova\n- 2nd Perk',
+        perks: [] //List of perk objects
     }
-]   
+] 
+
+export const user_rewards = [
+    {
+        id: '0',
+        name: 'Free Rinnova',
+        remaining_uses: 1,
+        description: 'Redeem a free drink from Rinnova', //User Visible Description
+        redeem_instructions: 'Promo Code: FreeDrink', //Internal CE Member Instructions after scan
+        image_url: 'https://drive.google.com/uc?export=view&id=1sFLQWj59AwHEinqvebw-nfgW_tCDOox-'
+    },
+    {
+        id: '1',
+        name: 'Free Rinnova Special Long Name',
+        remaining_uses: 2,
+        description: 'Redeem a free drink from Rinnova Long description',
+        image_url: 'https://drive.google.com/uc?export=view&id=1sFLQWj59AwHEinqvebw-nfgW_tCDOox-'
+    },
+    {
+        id: '2',
+        name: 'Free Sticker',
+        remaining_uses: 1,
+        description: 'You get a free sticker!'
+    },
+    {
+        id: '3',
+        name: 'Golf Cart Ride with OPS',
+        remaining_uses: 1,
+        description: 'Ride along with one of the OPS boys',
+        image_url: 'https://drive.google.com/uc?export=view&id=1rcy7LbM2Jf79YB1F-NGMlPx8X95u_ild'
+    },
+]
 
 //Sort the tiers in order of largest min_points first
 export function getSortedRewardTiers(){
@@ -210,4 +247,13 @@ export function getMaxRewardTierPoints() {
 export function getUserRewardTier(){
     let points = getUserInfo().rewardPoints;
     return getSortedRewardTiers().find((tier) => tier.min_points <= points);
+}
+
+//Get Users Current Rewards
+export function getUserRewards(){
+    return user_rewards;
+}
+
+export const getUserReward = (id) => {
+    return user_rewards.find((reward) => reward.id === id);
 }

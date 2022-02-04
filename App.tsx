@@ -1,10 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, StatusBar, SafeAreaView} from 'react-native';
+import { StyleSheet, View, StatusBar, SafeAreaView, Text} from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppNavigationBar from './components/navbar';
 import TabManager from './components/tabmanager';
+import ScreenRewards from './components/screens/ScreenRewards';
 
 export default function App() {
+
+  const Stack = createNativeStackNavigator();
 
   const [tabIndex, setTabIndex] = useState(0); //Handles which tab the app is currently in
 
@@ -22,10 +27,35 @@ export default function App() {
 
 
       {/* App Content */}
-      <TabManager currentTab={tabIndex} />
-      <AppNavigationBar setTab={setTabIndex} currentTab={tabIndex}/>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {/* Main Screen with hidden Header */}
+          <Stack.Screen name="Main" component={MainScreen} options={{headerShown:false}}/> 
+          {/* Rewards Screen with header enabled */}
+          <Stack.Screen name="Rewards" component={RewardsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </SafeAreaView>
   );
+
+  //@ts-ignore
+  function MainScreen({ navigation }) {
+    return (
+      <View style={styles.container}>
+        <TabManager currentTab={tabIndex} navigation={navigation}/>
+        <AppNavigationBar setTab={setTabIndex} currentTab={tabIndex}/>
+      </View>
+    );
+  }
+
+  //@ts-ignore
+  function RewardsScreen({ navigation }) {
+    return (
+      <View style={styles.container}>
+        <ScreenRewards navigation={navigation}/>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

@@ -6,8 +6,10 @@ export const COLOR_CEDARVILLE_BLUE = 'rgb(0,82,136)'
 export const COLOR_CEDARVILLE_YELLOW = 'rgb(235,185,19)'
 
 
-export function getUserInfo(){
-    return {name: 'Alec Mathisen', student_id: '2434296', phone: '(123) 456-7890', rewardPoints: 600}
+export const getUserInfo = () => {
+    return new Promise( (resolve, reject) => {
+        resolve({name: 'Alec Mathisen', student_id: '2434296', phone: '(123) 456-7890', rewardPoints: 600});
+    });
 }
 
 export const displayDate = (date) => {
@@ -77,8 +79,12 @@ export const displayDateRange = (date1, date2) => {
     return finalStr;
 }
 
-export const getStudentTickets = () => {
-    let studentID = getUserInfo().student_id;
+export const getStudentTickets = (studentID) => {
+
+    if(studentID === undefined || studentID === ''){
+        return []
+    }
+
     return fetch(API_URL + "/tickets")
       .then((res) => res.json())
       .then(
@@ -97,25 +103,12 @@ export const getStudentTickets = () => {
       );
   }
 
-export const userHasTicket = async (slot) => {
-    let studentID = getUserInfo().student_id;
-    return await Promises.all(
-            getStudentTickets(studentID)
-            .then((res) => {
-                let foundTicket = false;
-                res.forEach(element => {
-                    if(element.slot_id === slot._id){
-                        foundTicket = true;
-                    }
-                });
-                resolve(foundTicket)
-            })
-    )
-}
-
-export const claimTicket = (slot) => {
-    let studentID = getUserInfo().student_id;
-    console.log("Reserving Ticket: " + slot._id + " for " + studentID) 
+export const claimTicket = (studentID, slot) => {
+    if(studentID === undefined || studentID === ''){
+        Alert.alert("Invalid Student ID");
+        console.error("Invalid Student ID")
+        return false;
+    }
 
     const ticketReq = {
         student_id: studentID,
@@ -132,7 +125,6 @@ export const claimTicket = (slot) => {
     .then((res) => res.json())
     .then(
         (res) => {
-            console.log("Request Result:", res);
             if (res.status !== "success") {
                 Alert.alert("Error reserving ticket");
                 return false;
@@ -150,108 +142,93 @@ export const claimTicket = (slot) => {
 
 //Reward Points
 
-/*const reward_tiers = [
-    {
-        min_points: 1000,
-        color: 'gold', 
-        name: 'Gold'
-    },
-    {
-        min_points: 750,
-        color: 'silver', 
-        name: 'Silver'
-    },
-    {
-        min_points: 500,
-        color: 'purple', 
-        name: 'Purple'
-    },
-    {
-        min_points: 250,
-        color: 'green', 
-        name: 'Emerald'
-    },
-    {
-        min_points: 0,
-        color: 'orange', 
-        name: 'Bronze'
-    }
-]*/
-    
-export const reward_tiers = [
-    {
-        min_points: 1000,
-        color: 'gold', 
-        name: 'Gold',
-        description: '- 25% off Rinnova\n- 2nd Perk',
-        perks: []
-    },
-    {
-        min_points: 500,
-        color: 'silver', 
-        name: 'Silver',
-        description: '- 10% off Rinnova\n- 2nd Perk',
-        perks: []
-    },
-    {
-        min_points: 0,
-        color: 'orange', 
-        name: 'Bronze',
-        description: '- 5% off Rinnova\n- 2nd Perk',
-        perks: [] //List of perk objects
-    }
-] 
-
 export const user_rewards = [
     {
-        id: '0',
-        name: 'Free Rinnova',
-        remaining_uses: 1,
-        description: 'Redeem a free drink from Rinnova', //User Visible Description
-        redeem_instructions: 'Promo Code: FreeDrink', //Internal CE Member Instructions after scan
-        image_url: 'https://drive.google.com/uc?export=view&id=1sFLQWj59AwHEinqvebw-nfgW_tCDOox-'
+        reward_id: '61fd9d1f91772958c3f68b11', //Free Rinnova
+        remaining_uses: 1
     },
     {
-        id: '1',
-        name: 'Free Rinnova Special Long Name',
-        remaining_uses: 2,
-        description: 'Redeem a free drink from Rinnova Long description',
-        image_url: 'https://drive.google.com/uc?export=view&id=1sFLQWj59AwHEinqvebw-nfgW_tCDOox-'
+        reward_id: '61fd9d4091772958c3f68b13', //Free Sticker
+        remaining_uses: 2
     },
     {
-        id: '2',
-        name: 'Free Sticker',
-        remaining_uses: 1,
-        description: 'You get a free sticker!'
-    },
-    {
-        id: '3',
-        name: 'Golf Cart Ride with OPS',
-        remaining_uses: 1,
-        description: 'Ride along with one of the OPS boys',
-        image_url: 'https://drive.google.com/uc?export=view&id=1rcy7LbM2Jf79YB1F-NGMlPx8X95u_ild'
-    },
+        reward_id: '61fd9d6891772958c3f68b15', //Golf Cart ride
+        remaining_uses: 1
+    }
 ]
 
+const IP_ADDRESS = ;
+
+export function getRewards(){
+    return fetch(`http://${IP_ADDRESS}:3001/api` + "/reward")
+    .then((res) => res.json())
+    .then(
+        (res) => {
+            return res.data;
+        },
+        (err) => {
+            Alert.alert("Error: " + err)
+            console.error(err)
+            return [];
+        }
+    );
+}
+
+export function getRewardById(id){
+    return fetch(`http://${IP_ADDRESS}:3001/api` + "/reward/" + id)
+    .then((res) => res.json())
+    .then(
+        (res) => {
+            return res.data;
+        },
+        (err) => {
+            Alert.alert("Error: " + err)
+            console.error(err)
+            return null;
+        }
+    );
+}
+
+export function getRewardTiers(){
+    return fetch(`http://${IP_ADDRESS}:3001/api` + "/reward_tier")
+    .then((res) => res.json())
+    .then(
+        (res) => {
+            return res.data;
+        },
+        (err) => {
+            Alert.alert("Error: " + err)
+            console.error(err)
+            return [];
+        }
+    );
+}
+
 //Sort the tiers in order of largest min_points first
-export function getSortedRewardTiers(){
-    return reward_tiers.sort((a, b) => b.min_points > a.min_points ? 1 : -1);
+export function getSortedRewardTiers() {
+    return getRewardTiers().then((res) => {
+                return res.sort((a, b) => b.min_points > a.min_points ? 1 : -1);
+            })
 }
 
 //Get the maximum tier points
-export function getMaxRewardTierPoints() {
-    return getSortedRewardTiers()[0].min_points;
+export const getMaxRewardTierPoints = (tiers) => {
+    if(tiers === null || tiers === undefined || tiers.length == 0){
+        return -1;
+    }
+    return tiers[0].min_points;
 }
 
 //Get the users current tier
-export function getUserRewardTier(){
-    let points = getUserInfo().rewardPoints;
-    return getSortedRewardTiers().find((tier) => tier.min_points <= points);
+export function getUserRewardTier(rewardPoints, tiers){
+    return tiers.find((tier) => tier.min_points <= rewardPoints);
 }
 
 //Get Users Current Rewards
-export function getUserRewards(){
-    return user_rewards;
+export const getUserRewards = () => {
+    return new Promise( (resolve, reject) => {
+        resolve(user_rewards);
+    });
 }
 
 export const getUserReward = (id) => {

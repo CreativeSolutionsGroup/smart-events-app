@@ -8,7 +8,7 @@ import { displayDate, displayDateRange, claimTicket, COLOR_CEDARVILLE_YELLOW, CO
     Popup for infomation on an event and ticket slots
     Author: Alec Mathisen
 */
-const AttractionModal = ({attraction, slots, slotCounts, userTickets, closeModal, reloadTickets}) => {
+const AttractionModal = ({attraction, slots, slotCounts, userTickets, userInfo, closeModal, reloadTickets}) => {
     const [open, setOpen] = useState(false)
 
     return (
@@ -226,7 +226,7 @@ const AttractionModal = ({attraction, slots, slotCounts, userTickets, closeModal
                                                             }}
                                                             disabled={ticketsReserved === slot.ticket_capacity || hasTicket}
                                                             onPress={() => {
-                                                                claimTicket(slot)
+                                                                claimTicket(userInfo.student_id, slot)
                                                                 .then(success => {
                                                                     if(success){
                                                                         reloadTickets();

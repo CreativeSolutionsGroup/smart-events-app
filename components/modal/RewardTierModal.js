@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, Text, ScrollView } from "react-native";
+import React from "react";
+import { View, Text } from "react-native";
 import { Card, Overlay } from "react-native-elements";
 import { COLOR_CEDARVILLE_BLUE, getSortedRewardTiers} from "../../utils/util";
 
@@ -7,7 +7,7 @@ import { COLOR_CEDARVILLE_BLUE, getSortedRewardTiers} from "../../utils/util";
     Popup for infomation on the different reward tiers
     Author: Alec Mathisen
 */
-const RewardTierModal = ({open, closeModal}) => {
+const RewardTierModal = ({tiers, open, closeModal}) => {
 
     return (
         <Overlay isVisible={open} onBackdropPress={() => closeModal()}>
@@ -35,55 +35,57 @@ const RewardTierModal = ({open, closeModal}) => {
                     </Text>
                     {/* Reward Tier Cards */}
                     {
-                        getSortedRewardTiers().map((tier) => {
-                            return (
-                                <Card
-                                    containerStyle={{
-                                        borderColor: COLOR_CEDARVILLE_BLUE,
-                                        width: 300
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column'
+                        tiers !== undefined && tiers !== null ?
+                            tiers.map((tier) => {
+                                return (
+                                    <Card
+                                        containerStyle={{
+                                            borderColor: COLOR_CEDARVILLE_BLUE,
+                                            width: 300
                                         }}
                                     >
                                         <View
                                             style={{
                                                 display: 'flex',
-                                                flexDirection: 'row'
+                                                flexDirection: 'column'
                                             }}
                                         >
-                                            <Text
+                                            <View
                                                 style={{
-                                                    color: tier.color,
-                                                    fontSize: 18,
-                                                    fontWeight: 'bold',
-                                                    marginLeft: 5,
-                                                    marginRight: 'auto'
+                                                    display: 'flex',
+                                                    flexDirection: 'row'
                                                 }}
                                             >
-                                                {tier.name}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    color: tier.color,
-                                                    fontWeight: 'bold',
-                                                    marginLeft: 'auto',
-                                                    marginRight: 5
-                                                }}
-                                            >
-                                                {tier.min_points}
+                                                <Text
+                                                    style={{
+                                                        color: tier.color,
+                                                        fontSize: 18,
+                                                        fontWeight: 'bold',
+                                                        marginLeft: 5,
+                                                        marginRight: 'auto'
+                                                    }}
+                                                >
+                                                    {tier.name}
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        color: tier.color,
+                                                        fontWeight: 'bold',
+                                                        marginLeft: 'auto',
+                                                        marginRight: 5
+                                                    }}
+                                                >
+                                                    {tier.min_points}
+                                                </Text>
+                                            </View>
+                                            <Text>
+                                                {tier.description}
                                             </Text>
                                         </View>
-                                        <Text>
-                                            {tier.description}
-                                        </Text>
-                                    </View>
-                                </Card>
-                            )
-                        })
+                                    </Card>
+                                )
+                            })
+                        : null
                     }
                 </View>
             </View>

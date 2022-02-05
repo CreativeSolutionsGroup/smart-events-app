@@ -1,14 +1,15 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { LinearProgress } from "react-native-elements";
-import { getUserRewardTier, getUserInfo, getSortedRewardTiers, getMaxRewardTierPoints } from "../utils/util";
+import { getUserRewardTier, getUserInfo, getMaxRewardTierPoints } from "../utils/util";
 
 /*
     Progress Bar to show user's reward tier progress
     Author: Alec Mathisen
 */
-const RewardProgressBar = ({}) => {
-  return (
+const RewardProgressBar = ({tiers, userTier, userRewardPoints}) => {
+
+ return (
     <View
       style={{
         display: 'flex',
@@ -22,10 +23,10 @@ const RewardProgressBar = ({}) => {
                 marginRight: 'auto',
                 fontSize: 30,
                 fontWeight: 'bold',
-                color: getUserRewardTier().color
+                color: userTier === undefined || userTier == null ? 'black' : userTier.color
             }}
         >
-            {getUserInfo().rewardPoints}
+            {userRewardPoints}
         </Text>
 
         {/* Badge Icons */}
@@ -44,22 +45,25 @@ const RewardProgressBar = ({}) => {
             }}
         >
             {
-                getSortedRewardTiers().map((tier) => {
-                    let pos = (tier.min_points / getMaxRewardTierPoints()) * 300
-                    return(
-                        <View
-                            style={{
-                                backgroundColor: tier.color,
-                                width: 15,
-                                height: 15,
-                                borderRadius: 7.5,
-                                position: 'absolute',
-                                left: pos-7.5
-                            }}
-                        >
-                        </View>    
-                    );
-                })
+                tiers !== null && tiers !== undefined ?
+                    tiers.map((tier) => {
+                        let pos = (tier.min_points / getMaxRewardTierPoints(tiers)) * 300
+                        return(
+                            <View
+                                style={{
+                                    backgroundColor: tier.color,
+                                    width: 15,
+                                    height: 15,
+                                    borderRadius: 7.5,
+                                    position: 'absolute',
+                                    left: pos-7.5
+                                }}
+                                key={"tier_" + tier.name}                                
+                            >
+                            </View>    
+                        );
+                    })
+                : null
             }
         </View>
         <LinearProgress 
@@ -69,8 +73,8 @@ const RewardProgressBar = ({}) => {
                 marginLeft: 'auto',
                 marginRight: 'auto'
             }}
-            value={getUserInfo().rewardPoints / getMaxRewardTierPoints()}
-            color={getUserRewardTier().color}
+            value={userRewardPoints / getMaxRewardTierPoints(tiers)}
+            color={userTier === undefined || userTier == null ? 'black' : userTier.color}
             variant="determinate"
         />
     </View>

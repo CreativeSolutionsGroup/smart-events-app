@@ -2,24 +2,14 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { Image, Overlay } from "react-native-elements";
 import QRCode from 'react-native-qrcode-svg';
-import { COLOR_CEDARVILLE_BLUE, getSortedRewardTiers, getUserInfo, getUserReward, getUserRewards} from "../../utils/util";
-
 /*
     Popup for redeeming a user's reward
+    Pass in a userReward object with fields
+        - reward: the reward object
+        - remaining_uses: number of uses left
     Author: Alec Mathisen
 */
-const RewardRedeemModal = ({id, open, closeModal}) => {
-
-    const [userReward, setUserReward] = useState(null);
-
-    useEffect(() => {
-        if(id === null || id === undefined || id === ''){
-            setUserReward(null);
-        }
-        else {
-            setUserReward(getUserReward(id));
-        }
-    }, [id])
+const RewardRedeemModal = ({studentId, userReward, open, closeModal}) => {
 
     return (
         <Overlay isVisible={open} onBackdropPress={() => closeModal()}>
@@ -38,9 +28,9 @@ const RewardRedeemModal = ({id, open, closeModal}) => {
                             }}
                         >
                             {/* Image */}
-                            {userReward.image_url !== undefined && userReward.image_url !== "" ?
+                            {userReward.reward.image_url !== undefined && userReward.reward.image_url !== "" ?
                             <Image
-                                source={{ uri: userReward.image_url }}
+                                source={{ uri: userReward.reward.image_url }}
                                 resizeMode={'center'}
                                 containerStyle={{
                                     aspectRatio: 1,
@@ -80,7 +70,7 @@ const RewardRedeemModal = ({id, open, closeModal}) => {
                                         textAlign: 'center'
                                     }}
                                 >
-                                    {userReward.name}
+                                    {userReward.reward.name}
                                 </Text>
                             </View>
                             <Text
@@ -100,7 +90,7 @@ const RewardRedeemModal = ({id, open, closeModal}) => {
                                 }}
                             >
                                 <QRCode
-                                    value={JSON.stringify({student_id: getUserInfo().student_id, reward_id: id})}
+                                    value={JSON.stringify({student_id: studentId, reward_id: userReward.reward._id})}
                                     size={200}
                                     //Option for Logo
                                     //logo={{url: userReward.image_url}}

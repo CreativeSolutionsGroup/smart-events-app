@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text, SafeAreaView , View, ScrollView, TouchableOpacity, Alert} from "react-native";
 import { Button, Icon, Divider, LinearProgress } from "react-native-elements";
-import { COLOR_CEDARVILLE_BLUE, getUserInfo, getUserRewardTier, getMaxRewardTierPoints, getSortedRewardTiers } from "../../utils/util";
+import { COLOR_CEDARVILLE_BLUE, getUserInfo, getUserRewardTier, getMaxRewardTierPoints, getSortedRewardTiers, COLOR_CEDARVILLE_YELLOW } from "../../utils/util";
 import RewardTierModal from "../modal/RewardTierModal";
 import RewardProgressBar from "../rewardprogressbar";
 import QRCode from 'react-native-qrcode-svg';
@@ -165,20 +165,14 @@ const TabAccount = ({navigation}) => {
                         }}
                         key={"info_box"}
                     >
-                        {/* Title and Settings Button */}
+                        {/* Info */}
                         <View
                             style={{
                                 display: 'flex',
-                                flexDirection: 'row',
-                                marginTop: 5
+                                flexDirection: 'column',
+                                marginTop: 10,
                             }}
                         >
-                            {/* Filler View to allow centering of text */}
-                            <View 
-                                style={{
-                                    width: 40
-                                }}
-                            />
                             <Text
                                 style={{
                                     marginTop: 'auto',
@@ -192,31 +186,6 @@ const TabAccount = ({navigation}) => {
                             >
                                 Your Information
                             </Text>
-                            {/* TODO: Add Edit Modal for user Info */}
-                            <TouchableOpacity
-                                style={{
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: 40,
-                                    height: 40,
-                                    backgroundColor: 'transparent',
-                                    borderRadius: 20,
-                                    marginTop: 'auto',
-                                    marginBottom: 'auto'
-                                }}
-                            >
-                                <Icon name='edit' type='font-awesome5' size={25} color={COLOR_CEDARVILLE_BLUE} />
-                            </TouchableOpacity>
-                        </View>
-
-                        {/* Info */}
-                        <View
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                marginTop: 10,
-                            }}
-                        >
                             <Text
                                 style={{
                                     marginTop: 10,
@@ -292,7 +261,28 @@ const TabAccount = ({navigation}) => {
                             </Text>
                         </View>
                     </View>
-                    
+                    <Button
+                        title="Edit"
+                        icon={{
+                            name: 'edit',
+                            type: 'font-awesome',
+                            size: 15,
+                            color: 'white',
+                        }}
+                        iconContainerStyle={{ marginRight: 10 }}
+                        titleStyle={{ fontWeight: 'bold', paddingRight: 10 }}
+                        buttonStyle={{
+                            backgroundColor: COLOR_CEDARVILLE_YELLOW,
+                            borderColor: 'transparent',
+                            borderWidth: 0,
+                            borderRadius: 30,
+                            paddingHorizontal: 10
+                        }}
+                        containerStyle={{
+                            marginLeft: 'auto',
+                            marginRight: 'auto'
+                        }}
+                    />
                 </ScrollView>
             : null } 
             {/* TODO Add view for error in grabbing user info */}

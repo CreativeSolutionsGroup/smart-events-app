@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text, SafeAreaView , View, ScrollView, TouchableOpacity, Alert} from "react-native";
 import { Button, Icon, Divider, LinearProgress } from "react-native-elements";
 import { COLOR_CEDARVILLE_BLUE, getUserInfo, getUserRewardTier, getMaxRewardTierPoints, getSortedRewardTiers } from "../../utils/util";
+import RewardTierModal from "../modal/RewardTierModal";
 import RewardProgressBar from "../rewardprogressbar";
 import QRCode from 'react-native-qrcode-svg';
 
@@ -12,12 +13,13 @@ import QRCode from 'react-native-qrcode-svg';
 */
 const TabAccount = ({navigation}) => {
 
-    const [userInfo, setUserInfo] = useState(null);
-    const [tiers, setTiers] = useState([]);
-    const [userTier, setUserRewardTier] = useState(null);
+    const [userInfo, setUserInfo] = useState(null); //Caches user's info
+    const [tiers, setTiers] = useState([]); //Caches the reward tiers
+    const [userTier, setUserRewardTier] = useState(null); //Used to update the user's tier displayed
+    const [tiersOpen, setTiersOpen] = useState(false); // Used for Tier Information Modal
 
     useEffect(() => {
-        
+        //Download user's info
         getUserInfo()
         .then((res) => {
             setUserInfo(res);
@@ -25,6 +27,7 @@ const TabAccount = ({navigation}) => {
         })
     }, [])
 
+    //Downloads a sorted list of reward tiers from largest to least points
     function loadTierInfo(userInfo){
         getSortedRewardTiers()
         .then((res) => {
@@ -36,6 +39,7 @@ const TabAccount = ({navigation}) => {
     return (
         <View style={{flex: 1}}>
             {userInfo !== null && userInfo !== undefined ?
+                // Scroll View to support smaller screens
                 <ScrollView
                     style={{
                         display: 'flex',
@@ -68,6 +72,7 @@ const TabAccount = ({navigation}) => {
                                 marginBottom: 'auto'
                             }}
                         >
+                            {/* White Padding for QR Code standard */}
                             <View
                                 style={{
                                     backgroundColor: 'white',
@@ -90,32 +95,35 @@ const TabAccount = ({navigation}) => {
                     </View>    
 
                     {/* Tier */}
-                    <View
-                        style={{
-                            width: 100,
-                            height: 30,
-                            marginTop: 10,
-                            marginLeft: 'auto',
-                            marginRight: 'auto',
-                            backgroundColor: COLOR_CEDARVILLE_BLUE,
-                            borderRadius: 10
-                        }}
-                        key={"user_tier"}
+                    <TouchableOpacity
+                        onPress={() => setTiersOpen(true)}
                     >
-                        <Text
+                        <View
                             style={{
-                                marginTop: 'auto',
-                                marginBottom: 'auto',
+                                paddingHorizontal: 8,
+                                marginTop: 10,
                                 marginLeft: 'auto',
                                 marginRight: 'auto',
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                                color: userTier === undefined || userTier == null ? 'black' : userTier.color
+                                backgroundColor: COLOR_CEDARVILLE_BLUE,
+                                borderRadius: 10
                             }}
+                            key={"user_tier"}
                         >
-                            {userTier === undefined || userTier == null ? 'Error' : userTier.name}
-                        </Text>
-                    </View>
+                            <Text
+                                style={{
+                                    marginTop: 'auto',
+                                    marginBottom: 'auto',
+                                    marginLeft: 'auto',
+                                    marginRight: 'auto',
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    color: userTier === undefined || userTier == null ? 'black' : userTier.color
+                                }}
+                            >
+                                {userTier === undefined || userTier == null ? 'Error' : userTier.name}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
 
                     
                     {/* Rewards */}
@@ -288,6 +296,7 @@ const TabAccount = ({navigation}) => {
                 </ScrollView>
             : null } 
             {/* TODO Add view for error in grabbing user info */}
+            <RewardTierModal tiers={tiers} open={tiersOpen} closeModal={() => setTiersOpen(false)}/>
         </View>
     );
 };

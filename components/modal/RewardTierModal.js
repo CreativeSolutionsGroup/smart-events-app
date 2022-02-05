@@ -1,13 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { Card, Overlay } from "react-native-elements";
-import { COLOR_CEDARVILLE_BLUE, getSortedRewardTiers} from "../../utils/util";
+import { COLOR_CEDARVILLE_BLUE, getRewardById} from "../../utils/util";
 
 /*
     Popup for infomation on the different reward tiers
     Author: Alec Mathisen
 */
 const RewardTierModal = ({tiers, open, closeModal}) => {
+
+    const [tierRewards, setTierRewards] = useState({});
+
+    useEffect(() => {
+        if(tiers !== undefined){
+            tiers.forEach(async (tier) => {
+                let reward_ids = tier.rewards;
+                if(reward_ids.length > 0){
+                    let rewards = await Promise.all(reward_ids.map(async (tierReward) => {
+                        let reward = await getRewardById(tierReward); //Async grab of the rewards information
+                        return reward;
+                    }));
+                    let newTierRewards = tierRewards;
+                    newTierRewards[tier._id] = rewards;
+                    console.log(rewards)
+                    setTierRewards(newTierRewards);
+                }
+            })
+        } else {
+            setTierRewards({})
+        }
+    }, [tiers])
+
+    function buildStringList(list){
+        let listOfNames = list.map((element) => {
+            return element.name
+        });
+        return listOfNames.join(', ');
+    }
 
     return (
         <Overlay isVisible={open} onBackdropPress={() => closeModal()}>
@@ -40,9 +69,12 @@ const RewardTierModal = ({tiers, open, closeModal}) => {
                                 return (
                                     <Card
                                         containerStyle={{
-                                            borderColor: COLOR_CEDARVILLE_BLUE,
+                                            borderColor: 'black',
+                                            borderWidth: 1,
+                                            borderRadius: 5,
                                             width: 300
                                         }}
+                                        key={"tier_" + tier.name}
                                     >
                                         <View
                                             style={{
@@ -78,9 +110,36 @@ const RewardTierModal = ({tiers, open, closeModal}) => {
                                                     {tier.min_points}
                                                 </Text>
                                             </View>
-                                            <Text>
+                                            <Text
+                                                style={{
+                                                    marginTop: 5
+                                                }}
+                                            >
                                                 {tier.description}
                                             </Text>
+                                            {/* List of Rewards for the tier */}
+                                            {tierRewards[tier._id] !== null && tierRewards[tier._id] !== undefined ?
+                                                <View
+                                                    style={{
+                                                        marginTop: 5
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            fontWeight: 'bold'
+                                                        }}
+                                                    >
+                                                        Rewards  
+                                                    </Text>
+                                                    <Text
+                                                        style={{
+                                                            marginLeft: 10
+                                                        }}
+                                                    >
+                                                        {buildStringList(tierRewards[tier._id])}  
+                                                    </Text>
+                                                </View>
+                                            : null}
                                         </View>
                                     </Card>
                                 )

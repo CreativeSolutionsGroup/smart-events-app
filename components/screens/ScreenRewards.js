@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl, Alert } from "react-native";
 import { Card, Image } from "react-native-elements";
 import { COLOR_CEDARVILLE_BLUE, getUserRewardTier, getUserRewards, getSortedRewardTiers, COLOR_CEDARVILLE_YELLOW, getUserInfo, getRewardById } from "../../utils/util";
 import RewardTierModal from "../modal/RewardTierModal";
@@ -62,6 +62,7 @@ const ScreenRewards = ({navigation}) => {
       {userInfo !== null && userInfo !== undefined ?
         <View
           style={{
+            flex: 1,
             display: 'flex',
             flexDirection: 'column'
           }}
@@ -72,8 +73,7 @@ const ScreenRewards = ({navigation}) => {
             >
               <View
                   style={{
-                      width: 100,
-                      height: 30,
+                      paddingHorizontal: 8,
                       marginTop: 10,
                       marginLeft: 'auto',
                       marginRight: 'auto',
@@ -109,7 +109,11 @@ const ScreenRewards = ({navigation}) => {
             </View>
 
             {/* Reward List */}
-            <View>
+            <View
+              style={{
+                flex: 1
+              }}
+            >
               <Text
                 style={{
                   color: COLOR_CEDARVILLE_BLUE,
@@ -123,27 +127,29 @@ const ScreenRewards = ({navigation}) => {
               </Text>
               <ScrollView
                 style={{
-                  height: '75%'
+                  marginTop: 10,
                 }}
                 contentContainerStyle={{
-                  paddingBottom: 20
+                  paddingBottom: 10
                 }}
                 refreshControl={
                   <RefreshControl
                       refreshing={refreshing}
                       onRefresh={onRefresh}
                   />
-              }
+                }
               >
                 {
                   userRewards.length > 0 ? 
                     userRewards.map((userReward) => {
 
-                      if(userReward.remaining_uses === 0)return null;
-
                       return (
                         <TouchableOpacity
                           onPress={() => {
+                            if(userReward.remaining_uses < 1){
+                              Alert.alert("You have already used this reward")
+                              return;
+                            }
                             setRewardOpen(userReward)
                           }}
                           key={userReward.reward._id}
@@ -154,7 +160,8 @@ const ScreenRewards = ({navigation}) => {
                               flexDirection: 'column'
                             }}
                             containerStyle={{
-                              borderRadius: 10
+                              borderRadius: 10,
+                              opacity: userReward.remaining_uses < 1 ? 0.3 : 1.0
                             }}
                           >
                             <View
@@ -237,7 +244,7 @@ const ScreenRewards = ({navigation}) => {
                                   }}
                                 >
                                   {
-                                    [...Array(userReward.remaining_uses)].map((num) => {
+                                    [...Array(userReward.remaining_uses)].map((num, index) => {
                                         return (
                                           <View
                                             style={{
@@ -247,6 +254,7 @@ const ScreenRewards = ({navigation}) => {
                                               borderRadius: 10,
                                               marginLeft: 5
                                             }}
+                                            key={"reward_dot_" + userReward.reward._id + "_" + index}
                                           >
 
                                           </View>

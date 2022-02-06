@@ -4,6 +4,8 @@ import { Text, View, ActivityIndicator, ScrollView } from "react-native";
 import { Overlay, Image, Card, Icon, Button } from "react-native-elements";
 import { displayDate, displayDateRange, claimTicket, COLOR_CEDARVILLE_YELLOW, COLOR_CEDARVILLE_BLUE} from "../../utils/util";
 
+//FIXME: Make this more accessible to large text and screen zoom accessibility option
+
 /*
     Popup for infomation on an event and ticket slots
     Author: Alec Mathisen

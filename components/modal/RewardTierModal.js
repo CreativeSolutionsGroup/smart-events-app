@@ -22,7 +22,6 @@ const RewardTierModal = ({tiers, open, closeModal}) => {
                     }));
                     let newTierRewards = tierRewards;
                     newTierRewards[tier._id] = rewards;
-                    console.log(rewards)
                     setTierRewards(newTierRewards);
                 }
             })

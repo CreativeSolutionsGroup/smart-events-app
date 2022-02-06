@@ -144,23 +144,24 @@ export const claimTicket = (studentID, slot) => {
 
 export const user_rewards = [
     {
-        reward_id: '61fd9d1f91772958c3f68b11', //Free Rinnova
-        remaining_uses: 1
+        reward_id: '61ff021058ebed489a3be292', //Free Rinnova
+        remaining_uses: 1,
+        date_earned: "2022-02-06T05:45:53Z"
     },
     {
-        reward_id: '61fd9d4091772958c3f68b13', //Free Sticker
-        remaining_uses: 2
+        reward_id: '61ff023458ebed489a3be293', //Free Sticker
+        remaining_uses: 2,
+        date_earned: "2022-02-01T06:00:00Z"
     },
     {
-        reward_id: '61fd9d6891772958c3f68b15', //Golf Cart ride
-        remaining_uses: 1
+        reward_id: '61ff37f458ebed489a3be295', //Ride With OPS Reward
+        remaining_uses: 0,
+        date_earned: "2022-02-03T06:00:00Z"
     }
 ]
 
-const IP_ADDRESS = ;
-
 export function getRewards(){
-    return fetch(`http://${IP_ADDRESS}:3001/api` + "/reward")
+    return fetch(API_URL + "/reward")
     .then((res) => res.json())
     .then(
         (res) => {
@@ -175,7 +176,7 @@ export function getRewards(){
 }
 
 export function getRewardById(id){
-    return fetch(`http://${IP_ADDRESS}:3001/api` + "/reward/" + id)
+    return fetch(API_URL + "/reward/" + id)
     .then((res) => res.json())
     .then(
         (res) => {
@@ -190,7 +191,7 @@ export function getRewardById(id){
 }
 
 export function getRewardTiers(){
-    return fetch(`http://${IP_ADDRESS}:3001/api` + "/reward_tier")
+    return fetch(API_URL + "/reward_tier")
     .then((res) => res.json())
     .then(
         (res) => {

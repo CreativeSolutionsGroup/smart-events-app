@@ -41,12 +41,22 @@ const ScreenRewards = ({navigation}) => {
 
   async function loadUserRewards() {
       let serverRewards = await getUserRewards(); //Grab the server list of users reward ids and their remaining uses
+      
+      //Sort Rewards
+      let sortedRewards = serverRewards.sort((a, b) => new Date(b.date_earned).getTime() - new Date(a.date_earned).getTime()); //Sort by date earned
+      
       //Loop though them and resolve all of the promises
-      let rewards = await Promise.all(serverRewards.map(async (userReward) => {
+      let rewards = await Promise.all(sortedRewards.map(async (userReward) => {
         let reward = await getRewardById(userReward.reward_id); //Async grab of the rewards information
+        if(reward === null){
+          return null;
+        }
         return {remaining_uses: userReward.remaining_uses, reward: reward};
       }));
-      setUserRewards(rewards);
+
+      let sortedRewards2 = rewards.sort((a, b) => a.remaining_uses === 0 ? 1 : b.remaining_uses === 0 ? -1 : 0)
+
+      setUserRewards(sortedRewards2);
   }
 
   const onRefresh = React.useCallback(() => {
@@ -142,7 +152,9 @@ const ScreenRewards = ({navigation}) => {
                 {
                   userRewards.length > 0 ? 
                     userRewards.map((userReward) => {
-
+                      if(userReward === null || userReward.reward === null || userReward.reward === undefined){
+                        return null;
+                      }
                       return (
                         <TouchableOpacity
                           onPress={() => {
@@ -244,7 +256,7 @@ const ScreenRewards = ({navigation}) => {
                                   }}
                                 >
                                   {
-                                    [...Array(userReward.remaining_uses)].map((num, index) => {
+                                    [...Array(Math.min(userReward.remaining_uses, 10))].map((num, index) => {
                                         return (
                                           <View
                                             style={{
@@ -260,6 +272,21 @@ const ScreenRewards = ({navigation}) => {
                                           </View>
                                         )
                                     })
+                                  }
+                                  {
+                                    userReward.remaining_uses - 10 > 0 ?
+                                      <Text
+                                        style={{
+                                          color: COLOR_CEDARVILLE_YELLOW,
+                                          marginLeft: 5,
+                                          marginTop: 'auto',
+                                          marginBottom: 'auto',
+                                          fontWeight: 'bold'
+                                        }}
+                                      >
+                                        +{userReward.remaining_uses - 10}
+                                      </Text>
+                                    : null
                                   }
                                 </View>
                               </View>

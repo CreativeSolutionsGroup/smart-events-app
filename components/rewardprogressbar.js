@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { LinearProgress } from "react-native-elements";
-import { getUserRewardTier, getUserInfo, getMaxRewardTierPoints } from "../utils/util";
+import { getMaxRewardTierPoints } from "../utils/util";
 
 /*
     Progress Bar to show user's reward tier progress

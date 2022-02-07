@@ -1,14 +1,59 @@
 import { Alert } from "react-native";
+import { getAuth } from 'firebase/auth';
+import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { FIREBASE_DB } from "../App";
 
 export const API_URL = "https://api.cusmartevents.com/api";
 
 export const COLOR_CEDARVILLE_BLUE = 'rgb(0,82,136)'
 export const COLOR_CEDARVILLE_YELLOW = 'rgb(235,185,19)'
 
-
 export const getUserInfo = () => {
-    return new Promise( (resolve, reject) => {
-        resolve({name: 'Alec Mathisen', student_id: '2434296', phone: '(123) 456-7890', rewardPoints: 600});
+    
+    return new Promise( async (resolve, reject) => {
+
+        const auth = getAuth();
+        var user = auth.currentUser;
+
+        let uid = user.uid;
+
+        if(uid !=null){
+            const docRef = doc(FIREBASE_DB, "users", uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                let data = docSnap.data();
+                resolve({name: data.name, student_id: data.student_id, phone: data.phone, rewardPoints: data.reward_points, uid: uid});
+            } else {
+                reject({error: "No Such Document"});
+            }
+        } else {
+            reject({error: "User is not signed in"});
+        }
+    });
+}
+
+export const updateUserInfo = (data) => {
+    return new Promise( async (resolve, reject) => {
+
+        const auth = getAuth();
+        var user = auth.currentUser;
+
+        let uid = user.uid;
+
+        if(uid !=null){
+            const docRef = doc(FIREBASE_DB, "users", uid);
+            let update = await updateDoc(docRef, {
+                name: data.name,
+                student_id: data.student_id,
+                phone: data.phone
+            })
+            .error((e) => {
+                reject({type: "error"})
+            })
+            resolve({type: "success"});
+        } else {
+            reject({error: "User is not signed in"});
+        }
     });
 }
 
@@ -227,8 +272,32 @@ export function getUserRewardTier(rewardPoints, tiers){
 
 //Get Users Current Rewards
 export const getUserRewards = () => {
-    return new Promise( (resolve, reject) => {
-        resolve(user_rewards);
+    return new Promise( async (resolve, reject) => {
+
+        const auth = getAuth();
+        var user = auth.currentUser;
+
+        let uid = user.uid;
+
+        if(uid !=null){
+            const docRef = collection(FIREBASE_DB, "users/" + uid + "/rewards");
+            const querySnapshot = await getDocs(docRef);
+            let rewards = [];
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                let dateEarned = data.date_earned.toDate();
+                rewards.push(
+                    {
+                        reward_id: data.reward_id,
+                        remaining_uses: data.remaining_uses,
+                        date_earned: dateEarned
+                    }
+                )
+            });
+            resolve(rewards);
+        } else {
+            reject({error: "User is not signed in"});
+        }
     });
 }
 

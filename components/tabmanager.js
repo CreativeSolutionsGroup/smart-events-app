@@ -9,7 +9,7 @@ import TabAccount from "./tabs/TabAccount";
     Component that manages the tab switching display
     Author: Alec Mathisen
 */
-const TabManager = ({currentTab, navigation}) => {
+const TabManager = ({currentTab, navigation, userPhoto}) => {
 
 return (
     <View
@@ -36,7 +36,7 @@ return (
                 <View /> //Tickets
             :
             currentTab === 4 ?
-                <TabAccount navigation={navigation}/> //Account
+                <TabAccount navigation={navigation} userPhoto={userPhoto}/> //Account
             :
             <View />
         }

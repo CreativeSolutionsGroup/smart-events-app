@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Text, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from "react-native";
 import { Icon, Card, Image } from 'react-native-elements';
-import { displayDate, displayDateRange, API_URL, getStudentTickets, COLOR_CEDARVILLE_BLUE } from "../../utils/util";
+import { displayDate, displayDateRange, API_URL, getStudentTickets, getUserInfo, COLOR_CEDARVILLE_BLUE } from "../../utils/util";
 import AttractionModal from "../modal/AttractionModal";
 
 /*
@@ -10,10 +10,11 @@ import AttractionModal from "../modal/AttractionModal";
     This tab lists events and allows the user to reserve tickets or get more info about an event
     Author: Alec Mathisen
 */
-const TabEvents = () => {
+const TabEvents = ({userInfo, refreshUserInfo}) => {
 
     const [refreshing, setRefreshing] = useState(false);
 
+    //const [userInfo, setUserInfo] = useState(null);
     const [attractions, setAttractions] = useState({});
     const [slots, setSlots] = useState({});
     const [slotTicketCounts, setSlotTicketCounts] = useState({});
@@ -24,11 +25,13 @@ const TabEvents = () => {
     // Initial Load
     useEffect(() => {
         loadInContent();
-    }, []);
+    }, [])
 
 
     function loadInContent(){
-        loadUserTickets();
+        if(userInfo !== null){
+            loadUserTickets(userInfo.student_id);
+        }
 
         getAllAttractions();
         getAttractionSlots();
@@ -43,8 +46,8 @@ const TabEvents = () => {
         new Promise(resolve => setTimeout(resolve, 1000)).then(() => setRefreshing(false));
       }, []);
 
-    async function loadUserTickets(){
-        let tickets = await getStudentTickets();
+    async function loadUserTickets(studentId){
+        let tickets = await getStudentTickets(studentId);
         setUserTickets(tickets);
     } 
 
@@ -154,7 +157,7 @@ const TabEvents = () => {
 
     function reloadTickets(){
         getSlotTicketCounts();
-        loadUserTickets();
+        loadUserTickets(userInfo.student_id);
     }
 
     function closeModal() {
@@ -325,7 +328,7 @@ const TabEvents = () => {
                     })
                 }
             </ScrollView>
-            <AttractionModal attraction={openAttraction} slots={slots} slotCounts={slotTicketCounts} userTickets={userTickets} closeModal={closeModal} reloadTickets={reloadTickets}/>
+            <AttractionModal attraction={openAttraction} slots={slots} slotCounts={slotTicketCounts} userTickets={userTickets} userInfo={userInfo} closeModal={closeModal} reloadTickets={reloadTickets}/>
         </View>
     );
 };

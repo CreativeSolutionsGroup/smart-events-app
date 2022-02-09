@@ -3,8 +3,7 @@ import { getAuth } from 'firebase/auth';
 import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { FIREBASE_DB } from "../App";
 
-const IP_ADDRESS = "10.12.24.116"
-export const API_URL = `http://${IP_ADDRESS}:3001/api` //"https://api.cusmartevents.com/api";
+export const API_URL = "https://api.cusmartevents.com/api"; //`http://${IP_ADDRESS}:3001/api` 
 
 export const COLOR_CEDARVILLE_BLUE = 'rgb(0,82,136)'
 export const COLOR_CEDARVILLE_YELLOW = 'rgb(235,185,19)'

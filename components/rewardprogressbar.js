@@ -73,7 +73,7 @@ const RewardProgressBar = ({tiers, userTier, userRewardPoints}) => {
                 marginLeft: 'auto',
                 marginRight: 'auto'
             }}
-            value={userRewardPoints / getMaxRewardTierPoints(tiers)}
+            value={userRewardPoints !== null && userRewardPoints !== NaN ? userRewardPoints / getMaxRewardTierPoints(tiers) : 0}
             color={userTier === undefined || userTier == null ? 'black' : userTier.color}
             variant="determinate"
         />

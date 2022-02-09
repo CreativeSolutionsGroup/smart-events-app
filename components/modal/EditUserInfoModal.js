@@ -19,7 +19,7 @@ const EditUserInfoModal = ({userInfo, manuallyUpdateUserInfo, open, closeModal})
         if(userInfo !== null){
             setName(userInfo.name)
             setStudentID(userInfo.student_id)
-            setPhone(userInfo.phone)
+            setPhone(userInfo.phone_number)
         } else {
             setName("")
             setStudentID("")
@@ -49,7 +49,7 @@ const EditUserInfoModal = ({userInfo, manuallyUpdateUserInfo, open, closeModal})
             }
         }
 
-        if(phone !== userInfo.phone){
+        if(phone !== userInfo.phone_number){
             changed = true;
             if(phone === ""){
                 return false;

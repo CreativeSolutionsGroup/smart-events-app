@@ -10,11 +10,11 @@ import AttractionModal from "../modal/AttractionModal";
     This tab lists events and allows the user to reserve tickets or get more info about an event
     Author: Alec Mathisen
 */
-const TabEvents = () => {
+const TabEvents = ({userInfo, refreshUserInfo}) => {
 
     const [refreshing, setRefreshing] = useState(false);
 
-    const [userInfo, setUserInfo] = useState(null);
+    //const [userInfo, setUserInfo] = useState(null);
     const [attractions, setAttractions] = useState({});
     const [slots, setSlots] = useState({});
     const [slotTicketCounts, setSlotTicketCounts] = useState({});
@@ -24,16 +24,14 @@ const TabEvents = () => {
 
     // Initial Load
     useEffect(() => {
-        getUserInfo()
-        .then((res) => {
-            setUserInfo(res);
-            loadInContent(res.student_id);
-        })
-    }, []);
+        loadInContent();
+    }, [])
 
 
-    function loadInContent(studentId){
-        loadUserTickets(studentId);
+    function loadInContent(){
+        if(userInfo !== null){
+            loadUserTickets(userInfo.student_id);
+        }
 
         getAllAttractions();
         getAttractionSlots();
@@ -43,7 +41,7 @@ const TabEvents = () => {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
 
-        loadInContent(userInfo.student_id);
+        loadInContent();
 
         new Promise(resolve => setTimeout(resolve, 1000)).then(() => setRefreshing(false));
       }, []);

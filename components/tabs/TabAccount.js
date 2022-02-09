@@ -13,9 +13,9 @@ import UserQRCodeModal from "../modal/UserQRCodeModal";
     This tab shows the user their current reward points and tier and their info 
     Author: Alec Mathisen
 */
-const TabAccount = ({navigation, userPhoto}) => {
+const TabAccount = ({navigation, userInfo, userPhoto}) => {
 
-    const [userInfo, setUserInfo] = useState(null); //Caches user's info
+    //const [userInfo, setUserInfo] = useState(null); //Caches user's info
     const [qrCodeOpen, setQRCodeOpen] = useState(false); // Used for User QR Code Modal
     const [editInfoOpen, setEditInfoOpen] = useState(false); //Used for Edit Info Modal
     const [tiers, setTiers] = useState([]); //Caches the reward tiers
@@ -23,12 +23,7 @@ const TabAccount = ({navigation, userPhoto}) => {
     const [tiersOpen, setTiersOpen] = useState(false); // Used for Tier Information Modal
 
     useEffect(() => {
-        //Download user's info
-        getUserInfo()
-        .then((res) => {
-            setUserInfo(res);
-            loadTierInfo(res);
-        })
+        loadTierInfo();
     }, [])
 
     function manuallyUpdateUserInfo(data){
@@ -36,11 +31,15 @@ const TabAccount = ({navigation, userPhoto}) => {
     }
 
     //Downloads a sorted list of reward tiers from largest to least points
-    function loadTierInfo(userInfo){
+    function loadTierInfo(){
         getSortedRewardTiers()
         .then((res) => {
             setTiers(res);
-            setUserRewardTier(getUserRewardTier(userInfo.rewardPoints, res));
+            if(userInfo !=null){  
+                setUserRewardTier(getUserRewardTier(userInfo.reward_points, res));
+            } else {
+                setUserRewardTier(null);            
+            }
         })
     }
 
@@ -226,7 +225,7 @@ const TabAccount = ({navigation, userPhoto}) => {
                                 navigation.navigate("Rewards")
                             }}
                         >
-                            <RewardProgressBar tiers={tiers} userTier={userTier} userRewardPoints={userInfo.rewardPoints}/>
+                            <RewardProgressBar tiers={tiers} userTier={userTier} userRewardPoints={userInfo.reward_points}/>
                         </TouchableOpacity>
                     </View>
 
@@ -331,7 +330,7 @@ const TabAccount = ({navigation, userPhoto}) => {
                                     color: COLOR_CEDARVILLE_BLUE
                                 }}
                             >
-                                {userInfo.phone}
+                                {userInfo.phone_number}
                             </Text>
                         </View>
                     </View>
@@ -364,7 +363,7 @@ const TabAccount = ({navigation, userPhoto}) => {
             <RewardTierModal tiers={tiers} open={tiersOpen} closeModal={() => setTiersOpen(false)}/>
             <EditUserInfoModal userInfo={userInfo} manuallyUpdateUserInfo={manuallyUpdateUserInfo} open={editInfoOpen} closeModal={() => setEditInfoOpen(false)}/>
             {userInfo !== null ?
-                <UserQRCodeModal uid={userInfo.uid} name={userInfo.name} student_id={userInfo.student_id} phone={userInfo.phone} open={qrCodeOpen} closeModal={() => setQRCodeOpen(false)}/>
+                <UserQRCodeModal uid={userInfo._id} name={userInfo.name} student_id={userInfo.student_id} phone={userInfo.phone} open={qrCodeOpen} closeModal={() => setQRCodeOpen(false)}/>
             : null}
         </View>
     );

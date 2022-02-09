@@ -11,36 +11,31 @@ import { Divider } from "react-native-elements/dist/divider/Divider";
     Screen for the user to view their rewards and more details on the reward tiers
     Author: Alec Mathisen
 */
-const ScreenRewards = ({navigation}) => {
+const ScreenRewards = ({navigation, userInfo, refreshUserInfo}) => {
 
   const [tiersOpen, setTiersOpen] = useState(false);
   const [rewardOpen, setRewardOpen] = useState(null);
   const [refreshing, setRefreshing] = useState(false);  
  
-  const [userInfo, setUserInfo] = useState(null);
   const [tiers, setTiers] = useState([]);
   const [userTier, setUserRewardTier] = useState(null);
   const [userRewards, setUserRewards] = useState([]);
 
   useEffect(() => {
-    getUserInfo()
-    .then((res) => {
-        setUserInfo(res);
-        loadTierInfo(res);
-    })
+    loadTierInfo();
     loadUserRewards();
   }, [])
 
-  function loadTierInfo(userInfo){
+  function loadTierInfo(){
       getSortedRewardTiers()
       .then((res) => {
           setTiers(res);
-          setUserRewardTier(getUserRewardTier(userInfo.rewardPoints, res));
+          setUserRewardTier(getUserRewardTier(userInfo.reward_points, res));
       })
   }
 
   async function loadUserRewards() {
-      let serverRewards = await getUserRewards(); //Grab the server list of users reward ids and their remaining uses
+      let serverRewards = userInfo !== null ? await getUserRewards(userInfo._id) : [];
       
       //Sort Rewards
       let sortedRewards = serverRewards.sort((a, b) => new Date(b.date_earned).getTime() - new Date(a.date_earned).getTime()); //Sort by date earned
@@ -54,7 +49,7 @@ const ScreenRewards = ({navigation}) => {
         return {remaining_uses: userReward.remaining_uses, reward: reward};
       }));
 
-      let sortedRewards2 = rewards.sort((a, b) => a.remaining_uses === 0 ? 1 : b.remaining_uses === 0 ? -1 : 0)
+      let sortedRewards2 = rewards.sort((a, b) => a.remaining_uses === 0 ? 1 : b.remaining_uses === 0 ? -1 : 0) //Sort the rewards with zero uses left to the bottom
 
       setUserRewards(sortedRewards2);
   }
@@ -69,8 +64,7 @@ const ScreenRewards = ({navigation}) => {
 
   return (
     <View style={{flex: 1}}>
-      {userInfo !== null && userInfo !== undefined ?
-        <View
+      <View
           style={{
             flex: 1,
             display: 'flex',
@@ -115,7 +109,7 @@ const ScreenRewards = ({navigation}) => {
                 marginVertical: 10
               }}
             >
-              <RewardProgressBar tiers={tiers} userTier={userTier} userRewardPoints={userInfo.rewardPoints}/>
+              <RewardProgressBar tiers={tiers} userTier={userTier} userRewardPoints={userInfo.reward_points}/>
             </View>
 
             {/* Reward List */}
@@ -300,7 +294,6 @@ const ScreenRewards = ({navigation}) => {
               </ScrollView>
             </View>
         </View>
-      : null} 
       {/* TODO Add View for missing user info */}
       <RewardTierModal tiers={tiers} open={tiersOpen} closeModal={() => setTiersOpen(false)}/>
       <RewardRedeemModal userReward={rewardOpen} open={rewardOpen !== undefined && rewardOpen !== null} closeModal={() => setRewardOpen(null)}/>      

@@ -17,6 +17,8 @@ import { Image, Button } from 'react-native-elements';
 
 //Used to mute warnings of timers when perfomring Firestore Database Calls
 import { LogBox } from 'react-native';
+import { getUserServerID, getUserInfoFromServer, getUserInfo } from './utils/util';
+import { getDefaultReturnUrl } from 'expo-auth-session';
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 
 initializeApp({
@@ -39,6 +41,23 @@ export default function App() {
 
   const [tabIndex, setTabIndex] = useState(0); //Handles which tab the app is currently in
   const [userPhoto, setUserPhoto] = useState<String| null>("");
+
+  const [userIdToken, setUserIdToken] = useState<String | null>("");
+  const [userServerID, setUserServerID] = useState<String | null>("");
+  const [userInfo, setUserInfo] = useState<Object | null>(null);
+
+  function refreshUserInfo(){
+    if(userServerID === null || userIdToken === null){
+      return;
+    }
+    loadUserInfo(userServerID, userIdToken)
+  }
+
+  async function loadUserInfo(id : String, authToken : String){
+    const serverUserInfo = await getUserInfoFromServer(id, authToken)
+    console.log(JSON.stringify(serverUserInfo));
+    setUserInfo(serverUserInfo);
+  }
 
   return (
     // Creates the correct amount of space to fit the app below iOS camera bumps
@@ -88,6 +107,8 @@ export default function App() {
       if (response?.type === 'success') {
         const { id_token, user } = response.params;
         
+        setUserIdToken(id_token);
+
         const auth = getAuth();
         //const provider = new GoogleAuthProvider();
         const credential = GoogleAuthProvider.credential(id_token);
@@ -97,10 +118,22 @@ export default function App() {
             if(user !== null){
               let data = user.providerData[0];
               setUserPhoto(data.photoURL);
+
+              getUserServerID()
+              .then(async (res) => {
+                  if(res === null){
+                    Alert.alert("Unabled to find USERID")
+                    console.log("Unabled to find USERID")
+                  } else {
+                    setUserServerID(res)
+                    loadUserInfo(res, id_token)
+                  }
+              }) 
+
             }
         })
 
-        navigation.navigate("Main");
+        
       } 
     }, [response]);
 
@@ -142,7 +175,7 @@ export default function App() {
   function MainScreen({ navigation }) {
     return (
       <View style={styles.container}>
-        <TabManager currentTab={tabIndex} navigation={navigation} userPhoto={userPhoto}/>
+        <TabManager currentTab={tabIndex} navigation={navigation} userInfo={userInfo} refreshUserInfo={refreshUserInfo} userPhoto={userPhoto}/>
         <AppNavigationBar setTab={setTabIndex} currentTab={tabIndex}/>
       </View>
     );
@@ -152,7 +185,12 @@ export default function App() {
   function RewardsScreen({ navigation }) {
     return (
       <View style={styles.container}>
-        <ScreenRewards navigation={navigation}/>
+        <ScreenRewards navigation={navigation} userInfo={userInfo} refreshUserInfo={() => {
+          if(userServerID === null || userIdToken === null){
+            return;
+          }
+          loadUserInfo(userServerID, userIdToken)
+        }}/>
       </View>
     );
   }

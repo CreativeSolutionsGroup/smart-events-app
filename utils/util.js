@@ -3,33 +3,82 @@ import { getAuth } from 'firebase/auth';
 import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { FIREBASE_DB } from "../App";
 
-export const API_URL = "https://api.cusmartevents.com/api";
+const IP_ADDRESS = "10.12.24.116"
+export const API_URL = `http://${IP_ADDRESS}:3001/api` //"https://api.cusmartevents.com/api";
 
 export const COLOR_CEDARVILLE_BLUE = 'rgb(0,82,136)'
 export const COLOR_CEDARVILLE_YELLOW = 'rgb(235,185,19)'
 
-export const getUserInfo = () => {
+export const getUserInfo = async (user_id) => {
     
-    return new Promise( async (resolve, reject) => {
-
-        const auth = getAuth();
-        var user = auth.currentUser;
-
-        let uid = user.uid;
-
-        if(uid !=null){
-            const docRef = doc(FIREBASE_DB, "users", uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                let data = docSnap.data();
-                resolve({name: data.name, student_id: data.student_id, phone: data.phone, rewardPoints: data.reward_points, uid: uid});
-            } else {
-                reject({error: "No Such Document"});
-            }
-        } else {
-            reject({error: "User is not signed in"});
-        }
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const authToken = await user.getIdToken().catch((error) => {
+        Alert.alert("Error getting authToken");
+        return null;
     });
+
+    return getUserInfoFromServer(user_id, authToken);
+}
+
+export const getUserServerID = async () => {
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const email = user.email;
+
+    if(email === undefined || email === ''){
+        Alert.alert("Invalid Email");
+        console.error("Invalid Email")
+        return new Promise((resolve, reject) => { reject(null) });
+    }
+
+    const userReq = {
+        email: email
+    };
+
+    const postOptions = {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json" 
+        },
+        body: JSON.stringify(userReq),
+    };
+
+    let userID = await fetch(API_URL + "/find_user/", postOptions);
+    let json = await userID.json();
+    if(json.status !== "success"){
+        Alert.alert("User ID does not exist");
+        console.log("User ID does not exist")
+        return null;
+    }
+
+    return json.data.user_id;
+}
+
+export const getUserInfoFromServer = async (id, authToken) => {
+    if(id === undefined || id === ''){
+        Alert.alert("Invalid UserID");
+        console.error("Invalid UserID")
+        return null;
+    }
+
+    const getOptions = {
+        method: "GET",
+        headers: { 
+            'Authorization': 'Bearer '+ authToken,
+            "Content-Type": "application/x-www-form-urlencoded" 
+        }
+    };
+
+    let userInfo = await fetch(API_URL + `/user/${id}`, getOptions);
+    let json = await userInfo.json();
+    if(json.status !== "success"){
+        Alert.alert("User Info does not exist");
+        console.log(json.message)
+        return null;
+    }
+    return json.data;
 }
 
 export const updateUserInfo = (data) => {
@@ -270,37 +319,14 @@ export function getUserRewardTier(rewardPoints, tiers){
     return tiers.find((tier) => tier.min_points <= rewardPoints);
 }
 
-//Get Users Current Rewards
-export const getUserRewards = () => {
-    return new Promise( async (resolve, reject) => {
+export const getUserRewards = async (userId, authToken) => {
+    let userRewards = await fetch(API_URL + "/user/" + userId + "/rewards");
+    let json = await userRewards.json();
+    if(json.status !== "success"){
+        Alert.alert("User Rewards do not exist");
+        console.log("User Rewards do not exist")
+        return null;
+    }
 
-        const auth = getAuth();
-        var user = auth.currentUser;
-
-        let uid = user.uid;
-
-        if(uid !=null){
-            const docRef = collection(FIREBASE_DB, "users/" + uid + "/rewards");
-            const querySnapshot = await getDocs(docRef);
-            let rewards = [];
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                let dateEarned = data.date_earned.toDate();
-                rewards.push(
-                    {
-                        reward_id: data.reward_id,
-                        remaining_uses: data.remaining_uses,
-                        date_earned: dateEarned
-                    }
-                )
-            });
-            resolve(rewards);
-        } else {
-            reject({error: "User is not signed in"});
-        }
-    });
-}
-
-export const getUserReward = (id) => {
-    return user_rewards.find((reward) => reward.id === id);
+    return json.data;
 }

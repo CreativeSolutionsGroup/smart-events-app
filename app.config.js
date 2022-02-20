@@ -4,6 +4,8 @@ export default {
   expo: {
     name: "smart-events-app",
     slug: "smart-events-app",
+    scheme: "cusmartevents",
+    owner: "creativesolutionscu",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
@@ -35,7 +37,8 @@ export default {
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#FFFFFF"
-      }
+      },
+      useNextNotificationsApi: true
     },
     web: {
       favicon: "./assets/favicon.png"
@@ -47,6 +50,15 @@ export default {
       storageBucket: process.env.STORAGE_BUCKET,
       messagingSenderId: process.env.MESSAGING_SENDER_ID,
       appId: process.env.APP_ID
-    }
+    },
+    plugins: [
+      [
+        "expo-notifications",
+        {
+          icon: "./local/assets/notification-icon.png",
+          color: "#ffffff"
+        }
+      ]
+    ]
   }
 };

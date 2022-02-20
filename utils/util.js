@@ -1,7 +1,9 @@
 import { Alert } from "react-native";
 import { getAuth } from 'firebase/auth';
-import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
-import { FIREBASE_DB } from "../App";
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
+import * as Permissions from "expo-permissions";
+import * as Notifications from "expo-notifications";
 
 export const API_URL = "https://api.cusmartevents.com/api"; //`http://${IP_ADDRESS}:3001/api` 
 
@@ -27,7 +29,6 @@ export const getUserServerID = async () => {
     const email = user.email;
 
     if(email === undefined || email === ''){
-        Alert.alert("Invalid Email");
         console.error("Invalid Email")
         return new Promise((resolve, reject) => { reject(null) });
     }
@@ -47,8 +48,6 @@ export const getUserServerID = async () => {
     let userID = await fetch(API_URL + "/find_user/", postOptions);
     let json = await userID.json();
     if(json.status !== "success"){
-        Alert.alert("User ID does not exist");
-        console.log("User ID does not exist")
         return null;
     }
 
@@ -81,28 +80,7 @@ export const getUserInfoFromServer = async (id, authToken) => {
 }
 
 export const updateUserInfo = (data) => {
-    return new Promise( async (resolve, reject) => {
-
-        const auth = getAuth();
-        var user = auth.currentUser;
-
-        let uid = user.uid;
-
-        if(uid !=null){
-            const docRef = doc(FIREBASE_DB, "users", uid);
-            let update = await updateDoc(docRef, {
-                name: data.name,
-                student_id: data.student_id,
-                phone: data.phone
-            })
-            .error((e) => {
-                reject({type: "error"})
-            })
-            resolve({type: "success"});
-        } else {
-            reject({error: "User is not signed in"});
-        }
-    });
+    Alert.alert("Update User not added")
 }
 
 export const displayDate = (date) => {
@@ -329,3 +307,108 @@ export const getUserRewards = async (userId, authToken) => {
 
     return json.data;
 }
+
+//LOCATION
+
+export const ERROR_NO_LOCATION_SILENT_PERMISSION = "no-location-permission-silent";
+export const ERROR_NO_LOCATION_PERMISSION = "no-location-permission";
+export const ERROR_COARSE_LOCATION_PERMISSION = "coarse-location-permission";
+
+export const getUserLocation = async () => {    
+
+    let forgroundPermissions = await Location.getForegroundPermissionsAsync();
+    let highAccuracy = await Location.enableNetworkProviderAsync();
+
+    console.log("Location Permission")
+    console.log(forgroundPermissions)
+
+    if(forgroundPermissions.granted === false){
+        if(forgroundPermissions.canAskAgain === false){
+            return {error: ERROR_NO_LOCATION_SILENT_PERMISSION}
+        }
+        forgroundPermissions = await Location.requestForegroundPermissionsAsync();
+        if(forgroundPermissions.granted === false){
+            return {error: ERROR_NO_LOCATION_PERMISSION}
+        }
+    }
+
+    if(forgroundPermissions.android !== undefined){
+        if(forgroundPermissions.android.accuracy === "coarse"){
+            return {error: ERROR_COARSE_LOCATION_PERMISSION, android: true}
+        }
+    }
+        
+    let location = await Location.getCurrentPositionAsync({
+        enableHighAccuracy: true,
+        mayShowUserSettingsDialog: true,
+        accuracy: Location.LocationAccuracy.BestForNavigation
+    });
+    return {latitude: location.coords.latitude, longitude: location.coords.longitude, accuracy: location.coords.accuracy}
+}
+
+//TODO Create location permission walkthrough window
+export const setUpBackgroundLocation = async () => {
+    let backgroundPermissions = await Location.getBackgroundPermissionsAsync();
+        
+    if(backgroundPermissions.granted === false){
+        backgroundPermissions = await Location.requestBackgroundPermissionsAsync();
+        if(backgroundPermissions.granted === false){
+            return;
+        }
+    }
+
+    TaskManager.defineTask("GEOFENCE", ({ data: { eventType, region }, error }) => {
+        if (error) {
+            console.error(error.message);
+            return;
+        }
+        if (eventType === GeofencingEventType.Enter) {
+            sendLocalNotification("Geofence", "You have entered " + region.identifier)
+        }
+    });
+    Location.startGeofencingAsync("GEOFENCE", [
+        {identifier: "DMC", latitude: 39.750159, longitude: -83.812469, radius: 50},
+        {identifier: "SSC", latitude: 39.749165, longitude: -83.814518, radius: 60},
+        {identifier: "BTS", latitude: 39.749099, longitude: -83.811061, radius: 50},
+        {identifier: "Fieldhouse", latitude: 39.751590, longitude: -83.814733, radius: 50},
+        {identifier: "Callen", latitude: 39.751202, longitude: -83.813371, radius: 50}
+    ]);
+}
+
+export const getAllLocations = async () => {
+    let locations = await fetch(API_URL + "/location");
+    let json = await locations.json();
+    if(json.status !== "success"){
+        Alert.alert("Locations do not exist");
+        console.log("Locations do not exist")
+        return [];
+    }
+
+    return json.data;
+}
+
+//Notifications
+export const askNotificationPermissions = async () => {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    return existingStatus === 'granted';
+};
+
+export function sendLocalNotification(title, body){
+    Notifications.scheduleNotificationAsync({
+        content: {
+            title: title,
+            body: body,
+        },
+        trigger: null,
+    })
+};

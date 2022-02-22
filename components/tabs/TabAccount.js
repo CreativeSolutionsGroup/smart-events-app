@@ -389,7 +389,7 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
             <RewardTierModal tiers={tiers} open={tiersOpen} closeModal={() => setTiersOpen(false)}/>
             <EditUserInfoModal userInfo={userInfo} manuallyUpdateUserInfo={manuallyUpdateUserInfo} open={editInfoOpen} closeModal={() => setEditInfoOpen(false)}/>
             {userInfo !== null ?
-                <UserQRCodeModal uid={userInfo._id} name={userInfo.name} student_id={userInfo.student_id} phone={userInfo.phone} open={qrCodeOpen} closeModal={() => setQRCodeOpen(false)}/>
+                <UserQRCodeModal uid={userInfo._id} name={userInfo.name} student_id={userInfo.student_id} phone={userInfo.phone_number} open={qrCodeOpen} closeModal={() => setQRCodeOpen(false)}/>
             : null}
         </View>
     );

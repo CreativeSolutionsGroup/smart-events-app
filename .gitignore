@@ -15,3 +15,5 @@ web-build/
 yarn.lock
 .env
 yarn.lock
+GoogleService-Info.plist
+yarn.lock

@@ -11,9 +11,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import * as Notifications from "expo-notifications";
 import {AndroidNotificationPriority} from "expo-notifications";
-import { GeofencingEventType } from 'expo-location';
-import * as Location from 'expo-location';
-import * as TaskManager from 'expo-task-manager';
+
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithCredential, signOut } from 'firebase/auth';
@@ -21,7 +19,7 @@ import { Image, Button } from 'react-native-elements';
 
 //Used to mute warnings of timers when perfomring Firestore Database Calls
 import { LogBox } from 'react-native';
-import { getUserServerID, getUserInfoFromServer, askNotificationPermissions, sendLocalNotification, setUpBackgroundLocation, updateUserInfo } from './utils/util';
+import { getUserServerID, getUserInfoFromServer, askNotificationPermissions, sendLocalNotification, setUpBackgroundLocation, updateUserInfo, registerForPushNotificationsAsync } from './utils/util';
 import ScreenSignUp from './components/screens/ScreenSignUp';
 
 LogBox.ignoreLogs([
@@ -208,7 +206,7 @@ export default function App() {
     //@ts-ignore
     useEffect(async () => {
       //Ask user for notification permissions upon startup of main screen
-      askNotificationPermissions();
+      registerForPushNotificationsAsync();
       setUpBackgroundLocation();
     }, [])
 

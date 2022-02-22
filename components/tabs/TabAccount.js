@@ -7,6 +7,7 @@ import RewardProgressBar from "../rewardprogressbar";
 import QRCode from 'react-native-qrcode-svg';
 import EditUserInfoModal from "../modal/EditUserInfoModal";
 import UserQRCodeModal from "../modal/UserQRCodeModal";
+import { signOut, getAuth } from "firebase/auth";
 
 /*
     Account Tab
@@ -59,7 +60,43 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
                         flexDirection: 'column'
                     }}
                 >
-                    
+                    <TouchableOpacity
+                        style={{
+                            display: 'flex',
+                            position: 'absolute',
+                            right: 10,
+                            top: 10,
+                            width: 50,
+                            height: 50
+                        }}
+                        onPress={() => {
+                            let auth = getAuth();
+                            auth.signOut().then(function() {
+                                navigation.navigate("Login")
+                            }, function(error) {
+                                alert('Sign Out Error');
+                            });
+                        }}
+                    >
+                        <View
+                            style={{
+                                display: 'flex',
+                                width: 50,
+                                height: 50,
+                            }}
+                        >
+                            <Icon
+                                name='sign-out'
+                                type='font-awesome'
+                                color={COLOR_CEDARVILLE_BLUE}
+                                size={30}
+                                containerStyle={{
+                                    marginTop: 'auto',
+                                    marginBottom: 'auto'
+                                }}
+                            />
+                        </View>
+                    </TouchableOpacity>
                     {/* QR Code Circle */}
                     <View
                         style={{
@@ -72,6 +109,7 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
                         }}
                         key={"qr_code"}
                     >
+                        
                         <View
                             style={{
                                 width: 200,
@@ -167,6 +205,20 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
                         </TouchableOpacity>
                     </View>  
 
+                    {/* Name */}
+                    <Text
+                        style={{
+                            marginTop: 10,
+                            marginLeft: 'auto',
+                            marginRight: 'auto',
+                            fontSize: 28,
+                            fontWeight: 'bold',
+                            color: COLOR_CEDARVILLE_BLUE
+                        }}
+                    >
+                        {userInfo.name}
+                    </Text>
+
                     {/* Tier */}
                     <TouchableOpacity
                         onPress={() => setTiersOpen(true)}
@@ -261,47 +313,22 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
                             </Text>
                             <Text
                                 style={{
-                                    marginTop: 10,
-                                    marginLeft: 20,
+                                    marginTop: 5,
+                                    marginLeft: 'auto',
                                     marginRight: 'auto',
-                                    fontSize: 20,
+                                    fontSize: 25,
                                     fontWeight: 'bold',
                                     color: COLOR_CEDARVILLE_BLUE
                                 }}
                             >
-                                Name:
+                                Student ID
                             </Text>
                             <Text
                                 style={{
-                                    marginTop: 10,
-                                    marginLeft: 50,
+                                    marginTop: 5,
+                                    marginLeft: 'auto',
                                     marginRight: 'auto',
                                     fontSize: 20,
-                                    fontWeight: 'bold',
-                                    color: COLOR_CEDARVILLE_BLUE
-                                }}
-                            >
-                                {userInfo.name}
-                            </Text>
-                            <Text
-                                style={{
-                                    marginTop: 10,
-                                    marginLeft: 20,
-                                    marginRight: 'auto',
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                    color: COLOR_CEDARVILLE_BLUE
-                                }}
-                            >
-                                Student ID:
-                            </Text>
-                            <Text
-                                style={{
-                                    marginTop: 10,
-                                    marginLeft: 50,
-                                    marginRight: 'auto',
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
                                     color: COLOR_CEDARVILLE_BLUE
                                 }}
                             >
@@ -309,24 +336,22 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
                             </Text>
                             <Text
                                 style={{
-                                    marginTop: 10,
-                                    marginLeft: 20,
+                                    marginTop: 5,
+                                    marginLeft: 'auto',
                                     marginRight: 'auto',
-                                    fontSize: 20,
+                                    fontSize: 25,
                                     fontWeight: 'bold',
                                     color: COLOR_CEDARVILLE_BLUE
                                 }}
                             >
-                                Phone Number:
+                                Phone Number
                             </Text>
                             <Text
                                 style={{
-                                    marginTop: 10,
-                                    marginLeft: 50,
+                                    marginTop: 5,
+                                    marginLeft: 'auto',
                                     marginRight: 'auto',
-                                    marginBottom: 20,
                                     fontSize: 20,
-                                    fontWeight: 'bold',
                                     color: COLOR_CEDARVILLE_BLUE
                                 }}
                             >
@@ -352,6 +377,7 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
                             paddingHorizontal: 10
                         }}
                         containerStyle={{
+                            marginTop: 10,
                             marginLeft: 'auto',
                             marginRight: 'auto'
                         }}
@@ -363,7 +389,7 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
             <RewardTierModal tiers={tiers} open={tiersOpen} closeModal={() => setTiersOpen(false)}/>
             <EditUserInfoModal userInfo={userInfo} manuallyUpdateUserInfo={manuallyUpdateUserInfo} open={editInfoOpen} closeModal={() => setEditInfoOpen(false)}/>
             {userInfo !== null ?
-                <UserQRCodeModal uid={userInfo._id} name={userInfo.name} student_id={userInfo.student_id} phone={userInfo.phone} open={qrCodeOpen} closeModal={() => setQRCodeOpen(false)}/>
+                <UserQRCodeModal uid={userInfo._id} name={userInfo.name} student_id={userInfo.student_id} phone={userInfo.phone_number} open={qrCodeOpen} closeModal={() => setQRCodeOpen(false)}/>
             : null}
         </View>
     );

@@ -16,6 +16,7 @@ const UserQRCodeModal = ({uid, name, student_id, phone, open, closeModal}) => {
         >
            <QRCode
                 value={JSON.stringify({
+                    type: "user_info",
                     user_id: uid === undefined ? "Error" : uid,
                     name: name === undefined ? "Error" : name,
                     student_id: student_id === undefined ? "Error" : student_id,

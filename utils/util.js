@@ -196,6 +196,47 @@ export const getStudentTickets = (studentID) => {
       );
   }
 
+export const getSlotInfo = (slotID) => {
+
+    if(slotID === undefined || slotID === ''){
+        return []
+    }
+
+    return fetch(API_URL + "/slots/" + slotID)
+        .then((res) => res.json())
+        .then(
+        (res) => {
+            
+            // return info for specific slot
+            return res.data;
+        },
+        (err) => {
+            console.error(err)
+            return [];
+        }
+    );
+}
+
+export const getAttraction = (attractionID) => {
+    
+    if(attractionID === undefined || attractionID === ''){
+        return []
+    }
+
+    return fetch(API_URL + "/attractions/" + attractionID)
+        .then((res) => res.json())
+        .then(
+        (res) => {
+            // return info for specific slot
+            return res.data;
+        },
+        (err) => {
+            console.error(err)
+            return [];
+        }
+    );
+}
+
 export const claimTicket = (studentID, slot) => {
     if(studentID === undefined || studentID === ''){
         Alert.alert("Invalid Student ID");

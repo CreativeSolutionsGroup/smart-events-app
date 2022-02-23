@@ -49,6 +49,19 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
         return cut + "500-c";
     }
 
+    function userQRData(){
+        if(userInfo===null)
+            return {}
+
+        return {
+            type: "user_info",
+            uid: userInfo._id,
+            name: userInfo.name,
+            student_id: userInfo.student_id,
+            phone: userInfo.phone
+        }
+    }
+
     return (
         <View style={{flex: 1}}>
             {userInfo !== null && userInfo !== undefined ?
@@ -363,7 +376,7 @@ const TabAccount = ({navigation, userInfo, userPhoto}) => {
             <RewardTierModal tiers={tiers} open={tiersOpen} closeModal={() => setTiersOpen(false)}/>
             <EditUserInfoModal userInfo={userInfo} manuallyUpdateUserInfo={manuallyUpdateUserInfo} open={editInfoOpen} closeModal={() => setEditInfoOpen(false)}/>
             {userInfo !== null ?
-                <UserQRCodeModal uid={userInfo._id} name={userInfo.name} student_id={userInfo.student_id} phone={userInfo.phone} open={qrCodeOpen} closeModal={() => setQRCodeOpen(false)}/>
+                <UserQRCodeModal  data={userQRData()} open={qrCodeOpen} closeModal={() => setQRCodeOpen(false)}/>
             : null}
         </View>
     );

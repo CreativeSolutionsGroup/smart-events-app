@@ -3,6 +3,7 @@ import { View, Dimensions, Text } from "react-native";
 import TabHome from "./tabs/TabHome";
 import TabEvents from "./tabs/TabEvents";
 import TabAccount from "./tabs/TabAccount";
+import TabTickets from "./tabs/TabTickets";
 
 
 /*
@@ -33,7 +34,7 @@ return (
                 <TabEvents userInfo={userInfo} refreshUserInfo={refreshUserInfo}/> //Event List
             :
             currentTab === 3 ?
-                <View /> //Tickets
+                <TabTickets userInfo={userInfo} refreshUserInfo={refreshUserInfo}/> //Tickets
             :
             currentTab === 4 ?
                 <TabAccount navigation={navigation} userInfo={userInfo} userPhoto={userPhoto}/> //Account

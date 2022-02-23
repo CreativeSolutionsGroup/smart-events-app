@@ -1,11 +1,13 @@
 import React from "react";
-import { Overlay } from "react-native-elements";
+import { Overlay, Icon } from "react-native-elements";
 import QRCode from 'react-native-qrcode-svg';
+import { COLOR_CEDARVILLE_BLUE } from "../../utils/util";
+
 /*
-    Popup for User's QR Code
-    Author: Alec Mathisen
+    Popup for Ticket QR Code
+    Author: Aidan Graef
 */
-const UserQRCodeModal = ({uid, name, student_id, phone, open, closeModal}) => {
+const UserQRCodeModal = ({data, open, closeModal}) => {
 
     return (
         <Overlay 
@@ -13,14 +15,18 @@ const UserQRCodeModal = ({uid, name, student_id, phone, open, closeModal}) => {
             overlayStyle={{
                 maxHeight: '60%',
             }}
+            windowBackgroundColor={'rgba(100, 0, 0, .5)'}
         >
-           <QRCode
-                value={JSON.stringify({
-                    user_id: uid === undefined ? "Error" : uid,
-                    name: name === undefined ? "Error" : name,
-                    student_id: student_id === undefined ? "Error" : student_id,
-                    phone: phone === undefined ? "Error" : phone,
-                })}
+            {/* <Icon
+                iconStyle={{
+                    marginTop: 'auto',
+                    marginBottom: 'auto'
+                }}
+                type='font-awesome-5' name='clock' color='black'
+            /> */}
+            
+            <QRCode
+                value={JSON.stringify(data)}
                 size={200}
             />
         </Overlay>

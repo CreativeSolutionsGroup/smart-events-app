@@ -75,7 +75,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           {/* Login Screen with hidden Header */}
-          <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/> 
+          {/* <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>  */}
           {/* Main Screen with hidden Header */}
           <Stack.Screen name="Main" component={MainScreen} options={{headerShown:false}}/> 
           {/* Rewards Screen with header enabled */}

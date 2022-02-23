@@ -13,9 +13,10 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.4.1",
     "dotenv": "^14.3.2",
-    "expo": "~44.0.0",
+    "expo": "^44.0.6",
     "expo-application": "^4.0.2",
     "expo-auth-session": "^3.5.0",
+    "expo-cli": "^5.1.1",
     "expo-constants": "^13.0.1",
     "expo-google-sign-in": "~10.1.0",
     "expo-random": "^12.1.2",
@@ -30,7 +31,8 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-svg": "^12.1.1",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "yarn": "^1.22.17"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

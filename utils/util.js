@@ -7,6 +7,7 @@ import * as Permissions from "expo-permissions";
 import * as Notifications from "expo-notifications";
 import { GeofencingEventType } from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
+import axios from "axios";
 
 export const API_URL = "https://api.cusmartevents.com/api"; //`http://${IP_ADDRESS}:3001/api` 
 
@@ -416,7 +417,8 @@ export function sendLocalNotification(title, body){
     })
 };
 
-export async function registerForPushNotificationsAsync() {
+export async function registerForPushNotificationsAsync(authToken, userInfo) {
+    if(userInfo === undefined)return;
     let token;
     if (isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -431,8 +433,16 @@ export async function registerForPushNotificationsAsync() {
       }
       token = (await Notifications.getExpoPushTokenAsync({
           experienceId: "@creativesolutionscu/smart-events-app"
-      })).data;
-      console.log(token);
+      }).catch((error) => console.log(error))).data;
+      let userToken = userInfo.expoPushToken;
+      if(userToken === undefined || token !== userToken){
+        let updatedToken = await updateUserExpoToken(authToken, userInfo._id, token);
+        if(!updatedToken){
+            console.log("Error updating Expo Notification Token")
+        } else {
+            console.log("Updated Expo Notification Token")
+        }
+      }
     } else {
       alert('Must use physical device for Push Notifications');
     }
@@ -448,3 +458,21 @@ export async function registerForPushNotificationsAsync() {
   
     return token;
   }
+
+export const updateUserExpoToken = async (authToken, userId, newToken) => {
+    if(userId === undefined){
+        return false;
+    }
+    let authHeader = {Authorization: "Bearer " + authToken}
+    let data = {
+        expoPushToken: newToken
+    }
+    //Use endpoint that allows the user to update their account token
+    let locations = await axios.post(API_URL + "/" + userId + "/expoPushToken", data, {headers: authHeader}).error((e) => {
+        console.err(e);
+        return {status: "error"}
+    });
+    let json = await locations.json();
+    console.log(json)
+    return json.status === "success";
+}

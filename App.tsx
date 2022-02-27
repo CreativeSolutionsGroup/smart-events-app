@@ -206,7 +206,7 @@ export default function App() {
     //@ts-ignore
     useEffect(async () => {
       //Ask user for notification permissions upon startup of main screen
-      registerForPushNotificationsAsync();
+      registerForPushNotificationsAsync(userIdToken, userInfo);
       setUpBackgroundLocation();
     }, [])
 

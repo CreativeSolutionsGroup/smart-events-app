@@ -29,6 +29,15 @@ export default {
           reservedClientId: process.env.REVERSED_IOS_CLIENT_ID
         }
       },
+      infoPlist: {
+        NSLocationAlwaysAndWhenInUseUsageDescription: "App requires geolocation to validate check-in location",
+        NSLocationAlwaysUsageDescription: "App requires geolocation to validate check-in location",
+        NSLocationWhenInUseUsageDescription: "App requires geolocation to validate check-in location",
+        UIBackgroundModes:[
+          "location",
+          "fetch"
+        ]
+      },
       googleServicesFile: "./GoogleService-Info.plist"
     },
     android: {
@@ -38,6 +47,11 @@ export default {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#FFFFFF"
       },
+      permissions:[
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "ACCESS_FINE_LOCATION",
+      ],
       useNextNotificationsApi: true
     },
     web: {

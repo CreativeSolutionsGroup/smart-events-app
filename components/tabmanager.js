@@ -142,7 +142,7 @@ return (
                 display: 'flex',
                 position: 'absolute',
                 top: 0,
-                height: Dimensions.get('window').height - 100, //Leaves room between nav bar and tab
+                height: '86%',//Dimensions.get('window').height - 100, //Leaves room between nav bar and tab
                 width: '100%',
                 //Debug Border Box
                 borderColor: 'red',

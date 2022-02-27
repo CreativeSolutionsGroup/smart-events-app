@@ -115,7 +115,10 @@ const RewardRedeemModal = ({studentId, userReward, open, closeModal}) => {
                                         }}
                                     >
                                         <QRCode
-                                            value={JSON.stringify({reward_id: userReward.reward._id})}
+                                            value={JSON.stringify({
+                                                type: "reward",
+                                                user_reward_id: userReward._id
+                                            })}
                                             size={200}
                                             //Option for Logo
                                             //logo={{url: userReward.image_url}}

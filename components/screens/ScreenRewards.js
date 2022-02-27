@@ -46,7 +46,7 @@ const ScreenRewards = ({navigation, userInfo, refreshUserInfo}) => {
         if(reward === null){
           return null;
         }
-        return {remaining_uses: userReward.remaining_uses, reward: reward};
+        return {_id: userReward._id, remaining_uses: userReward.remaining_uses, reward: reward};
       }));
 
       let sortedRewards2 = rewards.sort((a, b) => a.remaining_uses === 0 ? 1 : b.remaining_uses === 0 ? -1 : 0) //Sort the rewards with zero uses left to the bottom

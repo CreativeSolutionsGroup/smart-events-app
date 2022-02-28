@@ -1,13 +1,9 @@
 import React from "react";
 import { Card, Image, Icon } from "react-native-elements";
 import { View, Text, ActivityIndicator } from "react-native";
-import QRCode from 'react-native-qrcode-svg';
 import { COLOR_CEDARVILLE_BLUE } from "../../utils/util";
 
 const QRTicket = ({name, imageURL, startTime, description, ticketID, location}) => {
-
-    // ticketID -> getSlot(slot_id) -> getAttraction(slot.attraction_id)
-    
 
     return (
         <Card
@@ -28,28 +24,14 @@ const QRTicket = ({name, imageURL, startTime, description, ticketID, location}) 
                     style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        padding: 5,
-                        marginTop: 5,
-                        // marginLeft: "auto",
-                        // marginRight: 'auto',
-                        // backgroundColor: "white"
                     }}
                 > 
-                    {/* <QRCode
-                    value={JSON.stringify({
-                        type: "ticket",
-                        ticket_id: ticketID,
-                    })}
-                    size={200}
-                    /> */}
-
-                    <Image
+                   <Image
                         source={{ uri: imageURL }}
                         containerStyle={{
                             aspectRatio: 16 / 9,
                             width: '100%',
-                            flex: 1,
-                            marginBottom: 10
+                            flex: 1
                         }}
                         PlaceholderContent={<ActivityIndicator />}
                         placeholderStyle={{
@@ -68,7 +50,7 @@ const QRTicket = ({name, imageURL, startTime, description, ticketID, location}) 
                         fontSize: 20,
                         fontWeight: 'bold',
                         color: 'white',
-                        marginTop: 10
+                        marginTop: 5
                     }}
                 >
                     {name}
@@ -77,10 +59,14 @@ const QRTicket = ({name, imageURL, startTime, description, ticketID, location}) 
                 {/* Description */}
                 <Text
                     style={{
-                        marginTop: 10,
+                        marginTop: 5,
+                        marginBottom: 5,
+                        marginLeft: 5,
                         color: 'white'
                     }}
-                >{description}</Text>
+                >
+                    {description}
+                </Text>
 
                 {/* Time Info */}
                 <View

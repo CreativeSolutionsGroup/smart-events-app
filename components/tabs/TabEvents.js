@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Text, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from "react-native";
-import { Icon, Card, Image } from 'react-native-elements';
+import { Icon, Card, Image, Divider } from 'react-native-elements';
 import { displayDate, displayDateRange, API_URL, getStudentTickets, getUserInfo, COLOR_CEDARVILLE_BLUE } from "../../utils/util";
 import AttractionModal from "../modal/AttractionModal";
 
@@ -178,6 +178,27 @@ const TabEvents = ({userInfo, refreshUserInfo}) => {
                     />
                 }
             >   
+                <Text
+                    style={{
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        marginTop: 10,
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: COLOR_CEDARVILLE_BLUE
+                    }}
+                >
+                    Events
+                </Text>
+                <Divider 
+                    style={{
+                        marginTop: 10,
+                        marginHorizontal: 10,
+                        borderRadius: 5
+                    }}
+                    color={COLOR_CEDARVILLE_BLUE}
+                    width={5}
+                />
                 {
                     Object.entries(attractions).map((l, i) => {
                         let attraction = attractions[l[0]];

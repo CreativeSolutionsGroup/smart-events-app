@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Text, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity, Alert } from "react-native";
-import { Icon, Card, Image } from 'react-native-elements';
+import { Icon, Card, Image, Divider} from 'react-native-elements';
 import { displayDate, displayDateRange, API_URL, getStudentTickets, getSlotInfo, getAttraction, getUserInfo, COLOR_CEDARVILLE_BLUE } from "../../utils/util";
 import AttractionModal from "../modal/AttractionModal";
 import QRTicket from "../modal/qrTicket";
@@ -98,8 +98,27 @@ const TabTickets = ({userInfo, refreshUserInfo}) => {
                     flexDirection: 'column'
                 }}
             >
-                <Text>Tickets</Text>
-
+                <Text
+                    style={{
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        marginTop: 10,
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: COLOR_CEDARVILLE_BLUE
+                    }}
+                >
+                    Tickets
+                </Text>
+                <Divider 
+                    style={{
+                        marginTop: 10,
+                        marginHorizontal: 10,
+                        borderRadius: 5
+                    }}
+                    color={COLOR_CEDARVILLE_BLUE}
+                    width={5}
+                />
                 {
                 Object.keys(slots).length > 0 ? 
                 userTickets.map(ticket => {

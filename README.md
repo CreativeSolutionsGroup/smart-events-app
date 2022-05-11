@@ -7,6 +7,8 @@
 
 # SmartEvents App
 
+DEPRECATED
+
 Expo React Native Android and iOS App
 
 [Expo Setup](https://docs.expo.dev/get-started/installation/)
